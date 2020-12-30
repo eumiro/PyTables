@@ -31,7 +31,7 @@ __docformat__ = 'reStructuredText'
 """The format of documentation strings in this module."""
 
 all_complibs = ['zlib', 'lzo', 'bzip2', 'blosc']
-all_complibs += ['blosc:%s' % cname for cname in blosc_compressor_list()]
+all_complibs += [f'blosc:{cname}' for cname in blosc_compressor_list()]
 
 
 """List of all compression libraries."""
@@ -213,7 +213,7 @@ class Filters:
                     # From Blosc 1.3 on, parameter 6 is used for the compressor
                     if len(values) > 6:
                         cname = blosc_compcode_to_compname(values[6])
-                        kwargs['complib'] = "blosc:%s" % cname
+                        kwargs['complib'] = f"blosc:{cname}"
                 else:
                     kwargs['complevel'] = values[0]
             elif name in foreign_complibs:
@@ -254,8 +254,8 @@ class Filters:
         if complevel > 0:
             complib_id = int(packed & 0xff)
             if not (0 < complib_id <= len(all_complibs)):
-                raise ValueError("invalid compression library id: %d"
-                                 % complib_id)
+                raise ValueError(
+                    f"invalid compression library id: {complib_id}")
             kwargs['complib'] = all_complibs[complib_id - 1]
         packed >>= 8
 
@@ -317,13 +317,13 @@ class Filters:
             # These checks are not performed when loading filters from disk.
             if complib not in all_complibs:
                 raise ValueError(
-                    "compression library ``%s`` is not supported; "
-                    "it must be one of: %s"
-                    % (complib, ", ".join(all_complibs)))
+                    f"compression library ``{complib}`` is not supported; "
+                    f"it must be one of: {', '.join(all_complibs)}")
             if utilsextension.which_lib_version(complib) is None:
-                warnings.warn("compression library ``%s`` is not available; "
-                              "using ``%s`` instead"
-                              % (complib, default_complib), FiltersWarning)
+                warnings.warn(
+                    f"compression library ``{complib}`` is not available; "
+                    f"using ``{default_complib}`` instead",
+                    FiltersWarning)
                 complib = default_complib  # always available
 
         complevel = int(complevel)
@@ -368,9 +368,8 @@ class Filters:
 
         if self.bitshuffle and blosc_version < min_blosc_bitshuffle_version:
             raise ValueError(
-                "This Blosc library does not have support for the bitshuffle "
-                "filter.  Please update to Blosc >= %s" % \
-                min_blosc_bitshuffle_version)
+                f"This Blosc library does not have support for the bitshuffle "
+                f"filter.  Please update to Blosc >= {min_blosc_bitshuffle_version}")
 
         self.fletcher32 = fletcher32
         """Whether the *Fletcher32* filter is active or not."""
@@ -381,15 +380,15 @@ class Filters:
     def __repr__(self):
         args, complevel = [], self.complevel
         if complevel >= 0:  # meaningful compression level
-            args.append('complevel=%d' % complevel)
+            args.append(f'complevel={complevel}')
         if complevel != 0:  # compression enabled (-1 or > 0)
-            args.append('complib=%r' % self.complib)
-        args.append('shuffle=%s' % self.shuffle)
-        args.append('bitshuffle=%s' % self.bitshuffle)
-        args.append('fletcher32=%s' % self.fletcher32)
+            args.append(f'complib={self.complib!r}')
+        args.append(f'shuffle={self.shuffle}')
+        args.append(f'bitshuffle={self.bitshuffle}')
+        args.append(f'fletcher32={self.fletcher32}')
         args.append(
-            'least_significant_digit=%s' % self.least_significant_digit)
-        return '{}({})'.format(self.__class__.__name__, ', '.join(args))
+            f'least_significant_digit={self.least_significant_digit}')
+        return f"{self.__class__.__name__}({', '.join(args)})"
 
     def __str__(self):
         return repr(self)

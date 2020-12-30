@@ -33,7 +33,7 @@ for i in range(0, N, lbucket):
 bucket = fill_bucket(N % lbucket)
 table.append(bucket)
 f.close()
-print("Time to create the table with %d entries: %.3f" % (N, time() - t1))
+print(f"Time to create the table with {N} entries: {t1:.3f}")
 
 # Now, read the table and group it by collection
 f = tables.open_file("data.nobackup/collations.h5", "a")
@@ -51,9 +51,9 @@ for c in collections:
     energy_this_collection = t['energy'][cond]
     sener = energy_this_collection.sum()
     coll1.append(sener)
-    print(c, ' : ', sener)
+    print(f"{c} : {sener}")
 del collections, energy_this_collection
-print("Time for first solution: %.3f" % (time() - t1))
+print(f"Time for first solution: {time() - t1:.3f}")
 
 #########################################################
 # Second solution: load all the collections in memory
@@ -75,12 +75,12 @@ for c in sorted(collections):
     coll2.append(sener)
     print(c, ' : ', sener)
 del collections, energy_this_collection
-print("Time for second solution: %.3f" % (time() - t1))
+print(f"Time for second solution: {time() - t1:.3f}")
 
 t1 = time()
 table.cols.collection.create_csindex()
 # table.cols.collection.reindex()
-print("Time for indexing: %.3f" % (time() - t1))
+print(f"Time for indexing: {time() - t1:.3f}")
 
 #########################################################
 # Third solution: load each collection separately
@@ -94,13 +94,13 @@ for c in np.unique(table.col('collection')):
     coll3.append(sener)
     print(c, ' : ', sener)
 del energy_this_collection
-print("Time for third solution: %.3f" % (time() - t1))
+print(f"Time for third solution: {time() - t1:.3f}")
 
 
 t1 = time()
 table2 = table.copy('/', 'EnergySortedByCollation', overwrite=True,
                     sortby="collection", propindexes=True)
-print("Time for sorting: %.3f" % (time() - t1))
+print(f"Time for sorting: {time() - t1:.3f}")
 
 #####################################################################
 # Fourth solution: load each collection separately.  Sorted table.
@@ -114,7 +114,7 @@ for c in np.unique(table2.col('collection')):
     coll4.append(sener)
     print(c, ' : ', sener)
     del energy_this_collection
-print("Time for fourth solution: %.3f" % (time() - t1))
+print(f"Time for fourth solution: {time() - t1:.3f}")
 
 
 # Finally, check that all solutions do match

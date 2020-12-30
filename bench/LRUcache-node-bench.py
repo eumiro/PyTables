@@ -20,7 +20,7 @@ f = tables.open_file(filename, "w", node_cache_slots=NODE_CACHE_SLOTS)
 g = f.create_group("/", "NodeContainer")
 print("Creating nodes")
 for i in range(nodespergroup):
-    f.create_array(g, "arr%d" % i, [i])
+    f.create_array(g, f"arr{i}", [i])
 f.close()
 
 f = tables.open_file(filename)
@@ -34,7 +34,7 @@ def iternodes():
     indices = indices.astype('i4').clip(0, nodespergroup - 1)
     g = f.get_node("/", "NodeContainer")
     for i in indices:
-        a = f.get_node(g, "arr%d" % i)
+        a = f.get_node(g, f"arr{i}")
         # print("a-->", a)
 
 print("reading nodes...")
@@ -42,7 +42,7 @@ print("reading nodes...")
 t1 = time()
 for a in f.root.NodeContainer:
     pass
-print("time (init cache)-->", round(time() - t1, 3))
+print(f"time (init cache)--> {time() - t1:.3f}")
 
 
 def timeLRU():
@@ -51,7 +51,7 @@ def timeLRU():
 #     for i in range(niter):
 #         iternodes()
     iternodes()
-    print("time (from cache)-->", round((time() - t1) / niter, 3))
+    print(f"time (from cache)--> {(time() - t1) / niter:.3f}")
 
 
 def profile(verbose=False):

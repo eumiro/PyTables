@@ -71,12 +71,12 @@ class BasicTestCase(common.TempFileMixin, TestCase):
             if self.type == "string":
                 object = numpy.ndarray(buffer=b"a"*self.objsize,
                                        shape=self.shape,
-                                       dtype="S%s" % carray.atom.itemsize)
+                                       dtype=f"S{carray.atom.itemsize}")
             else:
                 object = numpy.arange(self.objsize, dtype=carray.atom.dtype)
                 object.shape = carray.shape
         if common.verbose:
-            print("Object to append -->", repr(object))
+            print(f"Object to append --> {object!r}")
 
         carray[...] = object
 
@@ -107,7 +107,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_readCArray..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_readCArray...")
 
         # Create an instance of an HDF5 Table
         if self.reopen:
@@ -128,7 +128,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
             if self.type == "string":
                 object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                         shape=self.shape,
-                                        dtype="S%s" % carray.atom.itemsize)
+                                        dtype=f"S{carray.atom.itemsize}")
             else:
                 object_ = numpy.arange(self.objsize, dtype=carray.atom.dtype)
                 object_.shape = shape
@@ -191,7 +191,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
             if self.type == "string":
                 object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                         shape=self.shape,
-                                        dtype="S%s" % carray.atom.itemsize)
+                                        dtype=f"S{carray.atom.itemsize}")
             else:
                 object_ = numpy.arange(self.objsize, dtype=carray.atom.dtype)
                 object_.shape = shape
@@ -238,8 +238,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_getitemCArray..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_getitemCArray...")
 
         if not hasattr(self, "slices"):
             # If there is not a slices attribute, create it
@@ -251,9 +250,9 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         carray = self.h5file.get_node("/carray1")
 
         if common.verbose:
-            print("CArray descr:", repr(carray))
-            print("shape of read array ==>", carray.shape)
-            print("reopening?:", self.reopen)
+            print(f"CArray descr: {carray!r}")
+            print(f"shape of read array ==> {carray.shape}")
+            print(f"reopening?: {self.reopen}")
 
         shape = self._get_shape()
 
@@ -261,7 +260,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.shape,
-                                    dtype="S%s" % carray.atom.itemsize)
+                                    dtype=f"S{carray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=carray.atom.dtype)
             object_.shape = shape
@@ -281,12 +280,12 @@ class BasicTestCase(common.TempFileMixin, TestCase):
                 data = numpy.empty(shape=self.shape, dtype=self.type)
 
         if common.verbose:
-            print("Object read:\n", repr(data))  # , data.info()
-            print("Should look like:\n", repr(obj))  # , object.info()
+            print(f"Object read:\n {data!r}")  # , data.info()
+            print(f"Should look like:\n {obj!r}")  # , object.info()
             if hasattr(obj, "shape"):
-                print("Original object shape:", self.shape)
-                print("Shape read:", data.shape)
-                print("shape should look as:", obj.shape)
+                print(f"Original object shape: {self.shape}")
+                print(f"Shape read: {data.shape}")
+                print(f"shape should look as: {obj.shape}")
 
         if not hasattr(data, "shape"):
             # Scalar case
@@ -299,8 +298,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_setitemCArray..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03_setitemCArray...")
 
         if not hasattr(self, "slices"):
             # If there is not a slices attribute, create it
@@ -312,9 +310,9 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         carray = self.h5file.get_node("/carray1")
 
         if common.verbose:
-            print("CArray descr:", repr(carray))
-            print("shape of read array ==>", carray.shape)
-            print("reopening?:", self.reopen)
+            print(f"CArray descr: {carray!r}")
+            print(f"shape of read array ==> {carray.shape}")
+            print(f"reopening?: {self.reopen}")
 
         shape = self._get_shape()
 
@@ -322,7 +320,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.shape,
-                                    dtype="S%s" % carray.atom.itemsize)
+                                    dtype = f"S{carray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=carray.atom.dtype)
             object_.shape = shape
@@ -670,7 +668,7 @@ class BloscShuffleTestCase(BasicTestCase):
 @unittest.skipIf(not common.blosc_avail,
                  'BLOSC compression library not available')
 @unittest.skipIf(blosc_version < common.min_blosc_bitshuffle_version,
-                 'BLOSC >= %s required' % common.min_blosc_bitshuffle_version)
+                 f'BLOSC >= {common.min_blosc_bitshuffle_version} required')
 class BloscBitShuffleTestCase(BasicTestCase):
     shape = (20, 30)
     compress = 1
@@ -1178,7 +1176,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01a_String..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01a_String...")
 
         shape = (3, 2, 2)
         # Create an string atom
@@ -1213,7 +1211,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b_String..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b_String...")
 
         shape = (3, 2, 2)
 
@@ -1249,7 +1247,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02a_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02a_int...")
 
         shape = (3, 3)
 
@@ -1285,7 +1283,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02b_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02b_int...")
 
         shape = (3, 3)
 
@@ -1323,7 +1321,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01a_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01a_copy...")
 
         # Create an CArray
         shape = (2, 2)
@@ -1378,7 +1376,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b_copy...")
 
         # Create an CArray
         shape = (2, 2)
@@ -1431,7 +1429,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01c_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01c_copy...")
 
         # Create an CArray
         shape = (5, 5)
@@ -1486,7 +1484,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_copy...")
 
         # Create an CArray
         shape = (5, 5)
@@ -1542,7 +1540,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03c_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03c_copy...")
 
         shape = (2, 2)
         atom = Int16Atom()
@@ -1593,7 +1591,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03d_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03d_copy...")
 
         shape = (2, 2)
         atom = StringAtom(itemsize=4)
@@ -1647,7 +1645,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03e_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03e_copy...")
 
         shape = (2, 2)
         atom = StringAtom(itemsize=4)
@@ -1697,7 +1695,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04_copy...")
 
         # Create an CArray
         shape = (2, 2)
@@ -1737,7 +1735,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05_copy...")
 
         # Create an CArray
         shape = (2, 2)
@@ -1780,7 +1778,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05b_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05b_copy...")
 
         # Create an Array
         shape = (2, 2)
@@ -1835,7 +1833,7 @@ class CopyIndexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_index..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_index...")
 
         # Create an CArray
         shape = (100, 2)
@@ -1881,7 +1879,7 @@ class CopyIndexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_indexclosef..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_indexclosef...")
 
         # Create an CArray
         shape = (100, 2)

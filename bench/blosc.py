@@ -31,7 +31,7 @@ def create_file(kind, prec, synth):
         prefix = 'cellzome/cellzome-'
 
     for clevel in range(10):
-        oname = '%s/%s-%s%d-%s.h5' % (dirname, prefix, kind, clevel, prec)
+        oname = f'{dirname}/{prefix}-{kind}{clevel}-{prec}.h5'
         # print "creating...", iname
         f2 = tb.open_file(oname, "w")
 
@@ -58,7 +58,7 @@ def create_file(kind, prec, synth):
 def create_synth(kind, prec):
 
     prefix_orig = 'cellzome/cellzome-'
-    iname = dirname + prefix_orig + 'none-' + prec + '.h5'
+    iname = f"{dirname}{prefix_orig}none-{prec}.h5"
     f = tb.open_file(iname, "r")
 
     if prec == "single":
@@ -68,7 +68,7 @@ def create_synth(kind, prec):
 
     prefix = 'synth/synth-'
     for clevel in range(10):
-        oname = '%s/%s-%s%d-%s.h5' % (dirname, prefix, kind, clevel, prec)
+        oname = f'{dirname}/{prefix}-{kind}{clevel}-{prec}.h5'
         # print "creating...", iname
         f2 = tb.open_file(oname, "w")
 
@@ -103,12 +103,12 @@ def process_file(kind, prec, clevel, synth):
         prefix = 'synth/synth-'
     else:
         prefix = 'cellzome/cellzome-'
-    iname = '%s/%s-%s%d-%s.h5' % (dirname, prefix, kind, clevel, prec)
+    iname = f'{dirname}/{prefix}-{kind}{clevel}-{prec}.h5'
     f = tb.open_file(iname, "r")
     a_ = f.root.maxarea
     b_ = f.root.mascotscore
 
-    oname = '%s/%s-%s%d-%s-r.h5' % (dirname, prefix, kind, clevel, prec)
+    oname = f'{dirname}/{prefix}-{kind}{clevel}-{prec}-r.h5'
     f2 = tb.open_file(oname, "w")
     if lib == "none":
         filters = None
@@ -124,7 +124,7 @@ def process_file(kind, prec, clevel, synth):
         a2, b2 = a_[:], b_[:]
         t0 = time()
         r = eval(expression, {'a': a2, 'b': b2})
-        print("%5.2f" % round(time() - t0, 3))
+        print(f"{time() - t0:5.2f}")
     else:
         expr = tb.Expr(expression, {'a': a_, 'b': b_})
         expr.set_output(r)
@@ -161,4 +161,4 @@ if __name__ == '__main__':
             ts.append(time() - t0)
             t0 = time()
         ratio = size_orig / size
-        print("{:5.2f}, {:5.2f}".format(round(min(ts), 3), ratio))
+        print(f"{min(ts):5.2f}, {ratio:5.2f}")

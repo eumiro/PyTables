@@ -103,7 +103,7 @@ _npsizetype = numpy.array(SizeType(0)).dtype.type
 
 
 def _index_name_of(node):
-    return '_i_%s' % node._v_name
+    return f'_i_{node._v_name}'
 
 
 def _index_pathname_of(node):
@@ -121,7 +121,7 @@ def _index_pathname_of_column(table, colpathname):
 
 
 def _index_name_of_(nodeName):
-    return '_i_%s' % nodeName
+    return f'_i_{nodeName}'
 
 
 def _index_pathname_of_(nodePath):
@@ -208,7 +208,7 @@ def _table__where_indexed(self, compiled, condition, condvars,
             # Get the chunkmap from the index
             chunkmap = index.get_chunkmap()
         # Assign the chunkmap to the cmvars dictionary
-        cmvars["e%d" % i] = chunkmap
+        cmvars[f"e{i}"] = chunkmap
 
     if index.reduction == 1 and tcoords == 0:
         # No candidates found in any indexed expression component, so leave now
@@ -253,9 +253,10 @@ def _column__create_index(self, optlevel, kind, filters, tmp_dir,
 
     # Warn if the index already exists
     if index:
-        raise ValueError("%s for column '%s' already exists. If you want to "
-                         "re-create it, please, try with reindex() method "
-                         "better" % (str(index), str(self.pathname)))
+        raise ValueError(
+            f"{index!s} for column '{self.pathname!s}' already exists. "
+            f"If you want to re-create it, please, try with reindex() method "
+            "better")
 
     # Check that the datatype is indexable.
     if dtype.str[1:] == 'u8':
@@ -302,7 +303,7 @@ def _column__create_index(self, optlevel, kind, filters, tmp_dir,
     # Create the index itself
     index = Index(
         idgroup, name, atom=atom,
-        title="Index for %s column" % name,
+        title=f"Index for {name} column",
         kind=kind,
         optlevel=optlevel,
         filters=filters,
@@ -343,7 +344,7 @@ class _ColIndexes(dict):
         """Gives a detailed Description column representation."""
 
         rep = [f'  \"{k}\": {v}' for k, v in self.items()]
-        return '{\n  %s}' % (',\n  '.join(rep))
+        return '{\n  ' + ',\n  '.join(rep) + '}'
 
 
 class Table(tableextension.Table, Leaf):
@@ -823,11 +824,11 @@ class Table(tableextension.Table, Leaf):
                 chunkshape = tuple(chunkshape)
             except TypeError:
                 raise TypeError(
-                    "`chunkshape` parameter must be an integer or sequence "
-                    "and you passed a %s" % type(chunkshape))
+                    f"`chunkshape` parameter must be an integer or sequence "
+                    f"and you passed a {type(chunkshape)}")
             if len(chunkshape) != 1:
-                raise ValueError("`chunkshape` rank (length) must be 1: %r"
-                                 % (chunkshape,))
+                raise ValueError(
+                    f"`chunkshape` rank (length) must be 1: {chunkshape!r}")
             self._v_chunkshape = tuple(SizeType(s) for s in chunkshape)
 
         super().__init__(parentnode, name, new, filters, byteorder, _log,
@@ -889,12 +890,11 @@ class Table(tableextension.Table, Leaf):
 
         if oldindexes:  # this should only appear under 2.x Pro
             warnings.warn(
-                "table ``%s`` has column indexes with PyTables 1.x format. "
-                "Unfortunately, this format is not supported in "
-                "PyTables 2.x series. Note that you can use the "
-                "``ptrepack`` utility in order to recreate the indexes. "
-                "The 1.x indexed columns found are: %s" %
-                (self._v_pathname, self._listoldindexes),
+                f"table ``{self._v_pathname}`` has column indexes with "
+                f"PyTables 1.x format. Unfortunately, this format is not "
+                f"supported in PyTables 2.x series. Note that you can use "
+                f"the ``ptrepack`` utility in order to recreate the indexes. "
+                f"The 1.x indexed columns found are: {self._listoldindexes}",
                 OldIndexWarning)
 
         # It does not matter to which column 'indexobj' belongs,
@@ -936,15 +936,17 @@ class Table(tableextension.Table, Leaf):
             # If rowsize is too large, issue a Performance warning
             maxrowsize = params['BUFFER_TIMES'] * buffersize
             if rowsize > maxrowsize:
-                warnings.warn("""\
-The Table ``%s`` is exceeding the maximum recommended rowsize (%d bytes);
-be ready to see PyTables asking for *lots* of memory and possibly slow
-I/O.  You may want to reduce the rowsize by trimming the value of
-dimensions that are orthogonal (and preferably close) to the *main*
-dimension of this leave.  Alternatively, in case you have specified a
-very small/large chunksize, you may want to increase/decrease it."""
-                              % (self._v_pathname, maxrowsize),
-                              PerformanceWarning)
+                warnings.warn(
+                    f"The Table ``{self._v_pathname}`` is exceeding the "
+                    f"maximum recommended rowsize ({maxrowsize} bytes); "
+                    f"be ready to see PyTables asking for *lots* of memory "
+                    f"and possibly slow I/O.  You may want to reduce the "
+                    f"rowsize by trimming the value of dimensions that are "
+                    f"orthogonal (and preferably close) to the *main* "
+                    f"dimension of this leave.  Alternatively, in case "
+                    f"you have specified a very small/large chunksize, "
+                    f"you may want to increase/decrease it.""",
+                    PerformanceWarning)
         return nrowsinbuf
 
     def _getemptyarray(self, dtype):
@@ -987,10 +989,10 @@ very small/large chunksize, you may want to increase/decrease it."""
         maxColumns = self._v_file.params['MAX_COLUMNS']
         if (len(self.description._v_names) > maxColumns):
             warnings.warn(
-                "table ``%s`` is exceeding the recommended "
-                "maximum number of columns (%d); "
-                "be ready to see PyTables asking for *lots* of memory "
-                "and possibly slow I/O" % (self._v_pathname, maxColumns),
+                f"table ``{self._v_pathname}`` is exceeding the recommended "
+                f"maximum number of columns ({maxColumns}); "
+                f"be ready to see PyTables asking for *lots* of memory "
+                f"and possibly slow I/O",
                 PerformanceWarning)
 
         # 1. Create the HDF5 table (some parameters need to be computed).
@@ -1030,7 +1032,7 @@ very small/large chunksize, you may want to increase/decrease it."""
         if self._v_file.params['PYTABLES_SYS_ATTRS']:
             set_attr = self._v_attrs._g__setattr
             for i, colobj in enumerate(self.description._f_walk(type="Col")):
-                fieldname = "FIELD_%d_FILL" % i
+                fieldname = f"FIELD_{i}_FILL"
                 set_attr(fieldname, colobj.dflt)
 
         return self._v_objectid
@@ -1068,16 +1070,16 @@ very small/large chunksize, you may want to increase/decrease it."""
                 for objcol in self.description._f_walk(type="Col"):
                     colname = objcol._v_pathname
                     # Get the default values for each column
-                    fieldname = "FIELD_%s_FILL" % i
+                    fieldname = f"FIELD_{i}_FILL"
                     defval = get_attr(fieldname)
                     if defval is not None:
                         objcol.dflt = defval
                     else:
-                        warnings.warn("could not load default value "
-                                      "for the ``%s`` column of table ``%s``; "
-                                      "using ``%r`` instead"
-                                      % (colname, self._v_pathname,
-                                          objcol.dflt))
+                        warnings.warn(
+                            f"could not load default value for the "
+                            f"``{colname}`` column of table "
+                            f"``{self._v_pathname}``; using "
+                            f"``{objcol.dflt}`` instead")
                         defval = objcol.dflt
                     i += 1
 
@@ -1147,8 +1149,9 @@ very small/large chunksize, you may want to increase/decrease it."""
         try:
             return _reduce(getattr, colpathname.split('/'), self.description)
         except AttributeError:
-            raise KeyError("table ``%s`` does not have a column named ``%s``"
-                           % (self._v_pathname, colpathname))
+            raise KeyError(
+                f"table ``{self._v_pathname}`` does not have "
+                f"a column named ``{colpathname}``")
 
     _check_column = _get_column_instance
 
@@ -1249,30 +1252,28 @@ very small/large chunksize, you may want to increase/decrease it."""
             elif uservars is None and var in user_globals:
                 val = user_globals[var]
             else:
-                raise NameError("name ``%s`` is not defined" % var)
+                raise NameError(f"name ``{var}`` is not defined")
 
             # Check the value.
             if hasattr(val, 'pathname'):  # non-nested column
                 if val.shape[1:] != ():
                     raise NotImplementedError(
-                        "variable ``%s`` refers to "
-                        "a multidimensional column, "
-                        "not yet supported in conditions, sorry" % var)
+                        f"variable ``{var}`` refers to a multidimensional "
+                        f"column, not yet supported in conditions, sorry")
                 if (val._table_file is not tblfile or
                         val._table_path != tblpath):
-                    raise ValueError("variable ``%s`` refers to a column "
-                                     "which is not part of table ``%s``"
-                                     % (var, tblpath))
+                    raise ValueError(
+                        f"variable ``{var}`` refers to a column which is not "
+                        f"part of table ``{tblpath}``")
                 if val.dtype.str[1:] == 'u8':
                     raise NotImplementedError(
-                        "variable ``%s`` refers to "
-                        "a 64-bit unsigned integer column, "
-                        "not yet supported in conditions, sorry; "
-                        "please use regular Python selections" % var)
+                        f"variable ``{var}`` refers to a 64-bit unsigned "
+                        f"integer column, not yet supported in conditions, "
+                        f"sorry; please use regular Python selections")
             elif hasattr(val, '_v_colpathnames'):  # nested column
                 raise TypeError(
-                    "variable ``%s`` refers to a nested column, "
-                    "not allowed in conditions" % var)
+                    f"variable ``{var}`` refers to a nested column, "
+                    f"not allowed in conditions")
             else:  # only non-column values are converted to arrays
                 # XXX: not 100% sure about this
                 if isinstance(val, str):
@@ -1305,9 +1306,9 @@ very small/large chunksize, you may want to increase/decrease it."""
                     vartypes.append(numexpr_getType(val))  # expensive
                 except ValueError:
                     # This is more clear than the error given by Numexpr.
-                    raise TypeError("variable ``%s`` has data type ``%s``, "
-                                    "not allowed in conditions"
-                                    % (var, val.dtype.name))
+                    raise TypeError(
+                        f"variable ``{var}`` has data type "
+                        f"``{val.dtype.name}``, not allowed in conditions")
         colnames, varnames = tuple(colnames), tuple(varnames)
         colpaths, vartypes = tuple(colpaths), tuple(vartypes)
         condkey = (condition, colnames, varnames, colpaths, vartypes)
@@ -1358,8 +1359,9 @@ very small/large chunksize, you may want to increase/decrease it."""
 
         # Check that there actually are columns in the condition.
         if not set(compiled.parameters).intersection(set(colnames)):
-            raise ValueError("there are no columns taking part "
-                             "in condition ``%s``" % (condition,))
+            raise ValueError(
+                f"there are no columns taking part "
+                f"in condition ``{condition}``")
 
         # Store the compiled condition in the cache and return it.
         condcache[condkey] = compiled
@@ -1642,20 +1644,19 @@ very small/large chunksize, you may want to increase/decrease it."""
             icol = self.cols._f_col(sortby)
         else:
             raise TypeError(
-                "`sortby` can only be a `Column` or string object, "
-                "but you passed an object of type: %s" % type(sortby))
+                f"`sortby` can only be a `Column` or string object, "
+                f"but you passed an object of type: {type(sortby)}")
         if icol.is_indexed and icol.index.kind == "full":
             if checkCSI and not icol.index.is_csi:
                 # The index exists, but it is not a CSI one.
                 raise ValueError(
-                    "Field `%s` must have associated a CSI index "
-                    "in table `%s`, but the existing one is not. "
-                    % (sortby, self))
+                    f"Field `{sortby}` must have associated a CSI index "
+                    f"in table `{self}`, but the existing one is not. ")
             return icol.index
         else:
             raise ValueError(
-                "Field `%s` must have associated a 'full' index "
-                "in table `%s`." % (sortby, self))
+                f"Field `{sortby}` must have associated a 'full' index "
+                f"in table `{self}`.")
 
     def itersorted(self, sortby, checkCSI=False,
                    start=None, stop=None, step=None):
@@ -1793,8 +1794,7 @@ very small/large chunksize, you may want to increase/decrease it."""
                     select_field = field
                     field = None
                 else:
-                    raise KeyError(("Field {} not found in table "
-                                    "{}").format(field, self))
+                    raise KeyError(f"Field {field} not found in table {self}")
             else:
                 # The column hangs directly from the top
                 dtype_field = self.coldtypes[field]
@@ -1827,9 +1827,9 @@ very small/large chunksize, you may want to increase/decrease it."""
             else:
                 bytes_required = self.rowsize * nrows
             if bytes_required != out.nbytes:
-                raise ValueError(('output array size invalid, got {} bytes, '
-                                  'need {} bytes').format(out.nbytes,
-                                                           bytes_required))
+                raise ValueError(
+                    f'output array size invalid, got {out.nbytes} bytes, '
+                    f'need {bytes_required} bytes')
             if not out.flags['C_CONTIGUOUS']:
                 raise ValueError('output array not C contiguous')
             result = out
@@ -1917,9 +1917,9 @@ very small/large chunksize, you may want to increase/decrease it."""
             self._check_column(field)
 
         if out is not None and self.flavor != 'numpy':
-            msg = ("Optional 'out' argument may only be supplied if array "
-                   "flavor is 'numpy', currently is {}").format(self.flavor)
-            raise TypeError(msg)
+            raise TypeError(
+                f"Optional 'out' argument may only be supplied if array "
+                f"flavor is 'numpy', currently is {self.flavor!r}")
 
         start, stop, step = self._process_range(start, stop, step,
                                                 warn_negstep=False)
@@ -1993,8 +1993,8 @@ very small/large chunksize, you may want to increase/decrease it."""
             return self._colenums[colname]
         except KeyError:
             raise TypeError(
-                "column ``%s`` of table ``%s`` is not of an enumerated type"
-                % (colname, self._v_pathname))
+                f"column ``{colname}`` of table ``{self._v_pathname}`` "
+                f"is not of an enumerated type")
 
     def col(self, name):
         """Get a column from the table.
@@ -2218,9 +2218,10 @@ very small/large chunksize, you may want to increase/decrease it."""
             # so the resulting object is safe for in-place conversion.
             wbufRA = numpy.rec.array(rows, dtype=self._v_dtype)
         except Exception as exc:  # XXX
-            raise ValueError("rows parameter cannot be converted into a "
-                             "recarray object compliant with table '%s'. "
-                             "The error was: <%s>" % (str(self), exc))
+            raise ValueError(
+                f"rows parameter cannot be converted into a "
+                f"recarray object compliant with table '{self!s}'. "
+                f"The error was: <{exc}>")
         lenrows = wbufRA.shape[0]
         # If the number of rows to append is zero, don't do anything else
         if lenrows > 0:
@@ -2245,10 +2246,10 @@ very small/large chunksize, you may want to increase/decrease it."""
                 # so the resulting object is safe for in-place conversion.
                 recarr = numpy.rec.array(obj, dtype=self._v_dtype)
         except Exception as exc:  # XXX
-            raise ValueError("Object cannot be converted into a recarray "
-                             "object compliant with table format '%s'. "
-                             "The error was: <%s>" %
-                             (self.description._v_nested_descr, exc))
+            raise ValueError(
+                f"Object cannot be converted into a recarray object compliant "
+                f"with table format {self.description._v_nested_descr}. "
+                f"The error was: <{exc}>")
 
         return recarr
 
@@ -2388,9 +2389,10 @@ very small/large chunksize, you may want to increase/decrease it."""
                 iflavor = flavor_of(column)
                 column = array_as_internal(column, iflavor)
         except Exception as exc:  # XXX
-            raise ValueError("column parameter cannot be converted into a "
-                             "ndarray object compliant with specified column "
-                             "'%s'. The error was: <%s>" % (str(column), exc))
+            raise ValueError(
+                f"column parameter cannot be converted into an ndarray "
+                f"object compliant with specified column '{column!s}'. "
+                f"The error was: <{exc}>")
 
         # Get rid of single-dimensional dimensions
         column = column.squeeze()
@@ -2469,9 +2471,10 @@ very small/large chunksize, you may want to increase/decrease it."""
             else:
                 recarray = numpy.rec.fromarrays(columns, dtype=descr)
         except Exception as exc:  # XXX
-            raise ValueError("columns parameter cannot be converted into a "
-                             "recarray object compliant with table '%s'. "
-                             "The error was: <%s>" % (str(self), exc))
+            raise ValueError(
+                f"columns parameter cannot be converted into a recarray "
+                f"object compliant with table '{self!s}'. "
+                f"The error was: <{exc}>")
 
         if stop is None:
             # compute the stop value. start + len(rows)*step does not work
@@ -2894,11 +2897,11 @@ very small/large chunksize, you may want to increase/decrease it."""
         if self.indexed and self.autoindex:
             # Flush any unindexed row
             rowsadded = self.flush_rows_to_index(_lastrow=True)
-            assert rowsadded <= 0 or self._indexedrows == self.nrows, \
-                ("internal error: the number of indexed rows (%d) "
-                 "and rows in the table (%d) is not equal; "
-                 "please report this to the authors."
-                 % (self._indexedrows, self.nrows))
+            assert rowsadded <= 0 or self._indexedrows == self.nrows, (
+                    f"internal error: the number of indexed rows "
+                    f"({self._indexedrows}) and rows in the table "
+                    f"({self.nrows}) is not equal; "
+                    f"please report this to the authors.")
             if self._dirtyindexes:
                 # Finally, re-index any dirty column
                 self.reindex_dirty()
@@ -2985,12 +2988,10 @@ very small/large chunksize, you may want to increase/decrease it."""
                              self.chunkshape, self.autoindex,
                              _ColIndexes(self.colindexes))
         else:
-            return """\
-%s
-  description := %r
-  byteorder := %r
-  chunkshape := %r""" % \
-                (str(self), self.description, self.byteorder, self.chunkshape)
+            return f"""{self!s}
+  description := {self.description!r}
+  byteorder := {self.byteorder!r}
+  chunkshape := {self.chunkshape!r}"""
 
 
 class Cols:
@@ -3085,15 +3086,14 @@ class Cols:
         """
 
         if not isinstance(colname, str):
-            raise TypeError("Parameter can only be an string. You passed "
-                            "object: %s" % colname)
+            raise TypeError(
+                f"Parameter can only be an string. You passed object: {colname}")
         if ((colname.find('/') > -1 and
              colname not in self._v_colpathnames) and
                 colname not in self._v_colnames):
-            raise KeyError(("Cols accessor ``%s.cols%s`` does not have a "
-                            "column named ``%s``")
-                           % (self._v__tablePath, self._v_desc._v_pathname,
-                              colname))
+            raise KeyError(
+                f"Cols accessor ``{self._v__tablePath}.cols{self._v_desc}`` "
+                f"does not have a column named ``{colname}``")
 
         return self._g_col(colname)
 
@@ -3243,13 +3243,13 @@ class Cols:
         classname = self.__class__.__name__
         # The number of columns
         ncols = len(self._v_colnames)
-        return "%s.cols%s (%s), %s columns" % \
-               (tablepathname, descpathname, classname, ncols)
+        return (f"{tablepathname}.cols{descpathname} "
+                f"({classname}), {ncols} columns")
 
     def __repr__(self):
         """A detailed string representation for this object."""
 
-        out = str(self) + "\n"
+        out = f"{self!s}\n"
         for name in self._v_colnames:
             # Get this class name
             classname = getattr(self, name).__class__.__name__
@@ -3453,8 +3453,7 @@ class Column:
                 key.start, key.stop, key.step)
             return table.read(start, stop, step, self.pathname)
         else:
-            raise TypeError(
-                "'%s' key type is not valid in this context" % key)
+            raise TypeError(f"{key!r} key type is not valid in this context")
 
     def __iter__(self):
         """Iterate through all items in the column."""
@@ -3527,7 +3526,7 @@ class Column:
             return table.modify_column(start, stop, step,
                                        value, self.pathname)
         else:
-            raise ValueError("Non-valid index or slice: %s" % key)
+            raise ValueError(f"Non-valid index or slice: {key}")
 
     def create_index(self, optlevel=6, kind="medium", filters=None,
                      tmp_dir=None, _blocksizes=None, _testmode=False,
@@ -3578,7 +3577,7 @@ class Column:
 
         kinds = ['ultralight', 'light', 'medium', 'full']
         if kind not in kinds:
-            raise ValueError("Kind must have any of these values: %s" % kinds)
+            raise ValueError(f"Kind must have any of these values: {kinds}")
         if (not isinstance(optlevel, int) or
                 (optlevel < 0 or optlevel > 9)):
             raise ValueError("Optimization level must be an integer in the "
@@ -3589,8 +3588,8 @@ class Column:
             tmp_dir = os.path.dirname(self._table_file.filename)
         else:
             if not os.path.isdir(tmp_dir):
-                raise ValueError("Temporary directory '%s' does not exist" %
-                                 tmp_dir)
+                raise ValueError(
+                    f"Temporary directory {tmp_dir!r} does not exist")
         if (_blocksizes is not None and
                 (not isinstance(_blocksizes, tuple) or len(_blocksizes) != 4)):
             raise ValueError("_blocksizes must be a tuple with exactly 4 "
@@ -3707,8 +3706,8 @@ class Column:
         shape = self.shape
         # The type
         tcol = self.descr._v_types[self.name]
-        return "%s.cols.%s (%s%s, %s, idx=%s)" % \
-               (tablepathname, pathname, classname, shape, tcol, self.index)
+        return (f"{tablepathname}.cols.{pathname} "
+                f"({classname}{shape}, {tcol}, idx={self.index})")
 
     def __repr__(self):
         """A detailed string representation for this object."""

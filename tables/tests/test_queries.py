@@ -363,19 +363,18 @@ def create_test_method(type_, op, extracond, func=None):
         condvars[bname] = bvalue
 
     # Compute the name of columns.
-    colname = 'c_%s' % type_
-    ncolname = 'c_nested/%s' % colname
+    colname = f'c_{type_}'
+    ncolname = f'c_nested/{colname}'
 
     # Compute the query condition.
     if not op:  # as is
         cond = colname
     elif op == '~':  # unary
-        cond = '~(%s)' % colname
+        cond = f'~({colname})'
     elif op == '<' and func is None:  # binary variable-constant
-        cond = '{} {} {}'.format(colname, op, repr(condvars['bound']))
+        cond = f'{colname} {op} {condvars["bound"]}'
     elif isinstance(op, tuple):  # double binary variable-constant
-        cond = ('(lbound %s %s) & (%s %s rbound)'
-                % (op[0], colname, colname, op[1]))
+        cond = f'(lbound {op[0]} {colname}) & ({colname} {op[1]} rbound)'
     elif func is not None:
         cond = f'{func}({colname}) {op} func_bound'
     else:  # function or binary variable-variable
@@ -551,8 +550,8 @@ def niclassdata():
     for size in table_sizes:
         heavy = size in heavy_table_sizes
         for ndim in table_ndims:
-            classname = '{}{}TDTestCase'.format(size[0], ndim[0])
-            cbasenames = ('%sNITableMixin' % size, '%sTableMixin' % ndim,
+            classname = f'{size[0]}{ndim[0]}TDTestCase'
+            cbasenames = (f'{size}NITableMixin', f'{ndim}TableMixin',
                           'TableDataTestCase')
             classdict = dict(heavy=heavy)
             yield (classname, cbasenames, classdict)

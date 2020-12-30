@@ -71,12 +71,14 @@ class Link(Node):
         """
         class NoAttrs(AttributeSet):
             def __getattr__(self, name):
-                raise KeyError("you cannot get attributes from this "
-                               "`%s` instance" % self.__class__.__name__)
+                raise KeyError(
+                    f"you cannot get attributes from this "
+                    f"`{self.__class__.__name__}` instance")
 
             def __setattr__(self, name, value):
-                raise KeyError("you cannot set attributes to this "
-                               "`%s` instance" % self.__class__.__name__)
+                raise KeyError(
+                    f"you cannot set attributes to this "
+                    f"`{self.__class__.__name__}` instance")
 
             def _g_close(self):
                 pass
@@ -316,8 +318,7 @@ class SoftLink(linkextension.SoftLink, Link):
             dangling = " (dangling)"
         else:
             dangling = ""
-        return "{}{} ({}) -> {}{}".format(closed, self._v_pathname, classname,
-                                      self.target, dangling)
+        return f"{closed}{self._v_pathname} ({classname}) -> {self.target}{dangling}"
 
 
 class ExternalLink(linkextension.ExternalLink, Link):

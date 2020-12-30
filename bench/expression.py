@@ -29,7 +29,7 @@ def tables(docompute, dowrite, complib, verbose):
     else:
         filters = tb.Filters(complevel=0, shuffle=False)
     if verbose:
-        print("Will use filters:", filters)
+        print(f"Will use filters: {filters}")
 
     if dowrite:
         f = tb.open_file(ifilename, 'w')
@@ -42,15 +42,15 @@ def tables(docompute, dowrite, complib, verbose):
         b = f.create_carray(root, 'b', tb.Float32Atom(),
                             shape, filters=filters)
         if verbose:
-            print("chunkshape:", a.chunkshape)
-            print("chunksize:", np.prod(a.chunkshape) * a.dtype.itemsize)
+            print(f"chunkshape: {a.chunkshape}")
+            print(f"chunksize: {np.prod(a.chunkshape) * a.dtype.itemsize}")
         #row = np.linspace(0, 1, ncols)
         row = np.arange(0, ncols, dtype='float32')
         for i in range(nrows):
             a[i] = row * (i + 1)
             b[i] = row * (i + 1) * 2
         f.close()
-        print("[tables.Expr] Time for creating inputs:", round(time() - t0, 3))
+        print(f"[tables.Expr] Time for creating inputs: {time() - t0:.3f}")
 
     if docompute:
         f = tb.open_file(ifilename, 'r')
@@ -65,11 +65,10 @@ def tables(docompute, dowrite, complib, verbose):
         t0 = time()
         e.eval()
         if verbose:
-            print("First ten values:", r1[0, :10])
+            print(f"First ten values: {r1[:10]}")
         f.close()
         fr.close()
-        print("[tables.Expr] Time for computing & save:",
-              round(time() - t0, 3))
+        print(f"[tables.Expr] Time for computing & save: {time() - t0:.3f}")
 
 
 def memmap(docompute, dowrite, verbose):
@@ -89,8 +88,7 @@ def memmap(docompute, dowrite, verbose):
             a[i] = row * (i + 1)
             b[i] = row * (i + 1) * 2
         del a, b  # flush data
-        print("[numpy.memmap] Time for creating inputs:",
-              round(time() - t0, 3))
+        print(f"[numpy.memmap] Time for creating inputs: {time() - t0:.3f}")
 
     if docompute:
         t0 = time()
@@ -103,10 +101,10 @@ def memmap(docompute, dowrite, verbose):
         for i in range(nrows):
             r[i] = eval(expr, {'a': a[i], 'b': b[i]})
         if verbose:
-            print("First ten values:", r[0, :10])
+            print(f"First ten values: {r[:10]}")
         del a, b
         del r  # flush output data
-        print("[numpy.memmap] Time for compute & save:", round(time() - t0, 3))
+        print(f"[numpy.memmap] Time for compute & save: {time() - t0:.3f}")
 
 
 def do_bench(what, documpute, dowrite, complib, verbose):
@@ -121,14 +119,14 @@ if __name__ == "__main__":
     import os
     import getopt
 
-    usage = """usage: %s [-T] [-M] [-c] [-w] [-v] [-z complib]
+    usage = f"""usage: {sys.argv[0]} [-T] [-M] [-c] [-w] [-v] [-z complib]
            -T use tables.Expr
            -M use numpy.memmap
            -c do the computation only
            -w write inputs only
            -v verbose mode
            -z select compression library ('zlib' or 'lzo').  Default is None.
-""" % sys.argv[0]
+"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'TMcwvz:')
@@ -159,8 +157,9 @@ if __name__ == "__main__":
         elif option[0] == '-z':
             complib = option[1]
             if complib not in ('blosc', 'lzo', 'zlib'):
-                print("complib must be 'lzo' or 'zlib' "
-                       "and you passed: '%s'" % complib)
+                print(
+                    f"complib must be 'lzo' or 'zlib' "
+                    f"and you passed: {complib!r}")
                 sys.exit(1)
 
     # If not a backend selected, abort

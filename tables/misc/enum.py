@@ -142,17 +142,16 @@ sequences, mappings and other enumerations""")
                 f"name of enumerated value is not a string: {name!r}")
         if name.startswith('_'):
             raise ValueError(
-                "name of enumerated value can not start with ``_``: %r"
-                % name)
+                f"name of enumerated value can not start with ``_``: {name!r}")
         # This check is only necessary with a sequence base object.
         if name in names:
             raise ValueError(
-                "enumerated values contain duplicate names: %r" % name)
+                f"enumerated values contain duplicate names: {name!r}")
         # This check is only necessary with a mapping base object.
         if value in values:
             raise ValueError(
-                "enumerated values contain duplicate concrete values: %r"
-                % value)
+                f"enumerated values contain duplicate "
+                f"concrete values: {value}")
 
         names[name] = value
         values[value] = name
@@ -434,7 +433,7 @@ sequences, mappings and other enumerations""")
 
         """
 
-        return 'Enum(%s)' % self._names
+        return f'Enum({self._names})'
 
 
 def _test():

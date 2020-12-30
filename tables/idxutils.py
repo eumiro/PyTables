@@ -382,7 +382,7 @@ def inftype(dtype, itemsize, sign=+1):
     try:
         return infinitymap[dtype.name][sign >= 0]
     except KeyError:
-        raise TypeError("Type %s is not supported" % dtype.name)
+        raise TypeError(f"Type {dtype.name} is not supported")
 
 
 def string_next_after(x, direction, itemsize):
@@ -494,7 +494,7 @@ def nextafter(x, direction, dtype, itemsize):
     #    else:
     #        return PyNextAfter(x,x + 1)
 
-    raise TypeError("data type ``%s`` is not supported" % dtype)
+    raise TypeError(f"data type ``{dtype}`` is not supported")
 
 
 ## Local Variables:

@@ -84,55 +84,52 @@ def print_versions():
     """Print all the versions of software that PyTables relies on."""
 
     print('-=' * 38)
-    print("PyTables version:    %s" % tables.__version__)
-    print("HDF5 version:        %s" % tables.which_lib_version("hdf5")[1])
-    print("NumPy version:       %s" % numpy.__version__)
+    print(f"PyTables version:    {tables.__version__}")
+    print(f"HDF5 version:        {tables.which_lib_version('hdf5')[1]}")
+    print(f"NumPy version:       {numpy.__version__}")
     tinfo = tables.which_lib_version("zlib")
     if numexpr.use_vml:
         # Get only the main version number and strip out all the rest
         vml_version = numexpr.get_vml_version()
         vml_version = re.findall("[0-9.]+", vml_version)[0]
-        vml_avail = "using VML/MKL %s" % vml_version
+        vml_avail = f"using VML/MKL {vml_version}"
     else:
         vml_avail = "not using Intel's VML/MKL"
     print(f"Numexpr version:     {numexpr.__version__} ({vml_avail})")
     if tinfo is not None:
-        print("Zlib version:        {} ({})".format(tinfo[1],
-                                                "in Python interpreter"))
+        print(f"Zlib version:        {tinfo[1]} (in Python interpreter)")
     tinfo = tables.which_lib_version("lzo")
     if tinfo is not None:
-        print("LZO version:         {} ({})".format(tinfo[1], tinfo[2]))
+        print(f"LZO version:         {tinfo[1]} ({tinfo[2]})")
     tinfo = tables.which_lib_version("bzip2")
     if tinfo is not None:
-        print("BZIP2 version:       {} ({})".format(tinfo[1], tinfo[2]))
+        print(f"BZIP2 version:       {tinfo[1]} ({tinfo[2]})")
     tinfo = tables.which_lib_version("blosc")
     if tinfo is not None:
         blosc_date = tinfo[2].split()[1]
-        print("Blosc version:       {} ({})".format(tinfo[1], blosc_date))
+        print(f"Blosc version:       {tinfo[1]} ({blosc_date})")
         blosc_cinfo = tables.blosc_get_complib_info()
-        blosc_cinfo = [
-            "{} ({})".format(k, v[1]) for k, v in sorted(blosc_cinfo.items())
-        ]
-        print("Blosc compressors:   %s" % ', '.join(blosc_cinfo))
+        blosc_cinfo = [f"{k} ({v[1]})" for k, v in sorted(blosc_cinfo.items())]
+        print(f"Blosc compressors:   {', '.join(blosc_cinfo)}")
         blosc_finfo = ['shuffle']
         if tinfo[1] >= min_blosc_bitshuffle_version:
             blosc_finfo.append('bitshuffle')
-        print("Blosc filters:       %s" % ', '.join(blosc_finfo))
+        print(f"Blosc filters:       {', '.join(blosc_finfo)}")
     try:
         from Cython import __version__ as cython_version
-        print('Cython version:      %s' % cython_version)
+        print(f'Cython version:      {cython_version}')
     except:
         pass
-    print('Python version:      %s' % sys.version)
-    print('Platform:            %s' % platform.platform())
+    print(f'Python version:      {sys.version}')
+    print(f'Platform:            {platform.platform()}')
     #if os.name == 'posix':
     #    (sysname, nodename, release, version, machine) = os.uname()
     #    print('Platform:          %s-%s' % (sys.platform, machine))
-    print('Byte-ordering:       %s' % sys.byteorder)
-    print('Detected cores:      %s' % detect_number_of_cores())
-    print('Default encoding:    %s' % sys.getdefaultencoding())
-    print('Default FS encoding: %s' % sys.getfilesystemencoding())
-    print('Default locale:      (%s, %s)' % locale.getdefaultlocale())
+    print(f'Byte-ordering:       {sys.byteorder}')
+    print(f'Detected cores:      {detect_number_of_cores()}')
+    print(f'Default encoding:    {sys.getdefaultencoding()}')
+    print(f'Default FS encoding: {sys.getfilesystemencoding()}')
+    print(f'Default locale:      {locale.getdefaultlocale()}')
     print('-=' * 38)
 
     # This should improve readability whan tests are run by CI tools
@@ -249,7 +246,7 @@ class PyTablesTestCase(unittest.TestCase):
             methodName = self._getMethodName()
 
             title = f"Running {name}.{methodName}"
-            print('{}\n{}'.format(title, '-' * len(title)))
+            print(f'{title}\n{"-" * len(title)}')
 
     # COMPATIBILITY: assertWarns is new in Python 3.2
     if not hasattr(unittest.TestCase, 'assertWarns'):
@@ -371,7 +368,7 @@ class ShowMemTime(PyTablesTestCase):
             elif line.startswith("VmLib:"):
                 vmlib = int(line.split()[1])
         print("\nWallClock time:", time.time() - self.tref)
-        print("Memory usage: ******* %s *******" % self._getName())
+        print(f"Memory usage: ******* {self._getName()} *******")
         print(f"VmSize: {vmsize:>7} kB\tVmRSS: {vmrss:>7} kB")
         print(f"VmData: {vmdata:>7} kB\tVmStk: {vmstk:>7} kB")
         print(f"VmExe:  {vmexe:>7} kB\tVmLib: {vmlib:>7} kB")

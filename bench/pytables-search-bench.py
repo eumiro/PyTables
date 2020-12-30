@@ -47,8 +47,8 @@ def create_db(filename, nrows):
     table.flush()
     ctime = time() - t1
     if verbose:
-        print("insert time:", round(ctime, 5))
-        print("Krows/s:", round((nrows / 1000.) / ctime, 5))
+        print(f"insert time: {ctime:.5f}")
+        print(f"Krows/s: {nrows / 1000. / ctime:.5f}")
     index_db(table)
     close_db(con)
 
@@ -58,14 +58,14 @@ def index_db(table):
     table.cols.col2.create_index()
     itime = time() - t1
     if verbose:
-        print("index time (int):", round(itime, 5))
-        print("Krows/s:", round((nrows / 1000.) / itime, 5))
+        print(f"index time (int): {itime:.5f}")
+        print(f"Krows/s: {nrows / 1000. / itime:.5f}")
     t1 = time()
     table.cols.col4.create_index()
     itime = time() - t1
     if verbose:
-        print("index time (float):", round(itime, 5))
-        print("Krows/s:", round((nrows / 1000.) / itime, 5))
+        print(f"index time (float): {itime:.5f}")
+        print(f"Krows/s: {nrows / 1000. / itime:.5f}")
 
 
 def query_db(filename, rng):
@@ -83,8 +83,8 @@ def query_db(filename, rng):
             ]
         qtime = (time() - t1) / ntimes
         if verbose:
-            print("query time (int, not indexed):", round(qtime, 5))
-            print("Mrows/s:", round((nrows / 1000.) / qtime, 5))
+            print(f"query time (int, not indexed): {qtime:.5f}")
+            print(f"Mrows/s: {nrows / 1000. / qtime:.5f}")
             print(results)
     # Query for indexed column
     t1 = time()
@@ -96,8 +96,8 @@ def query_db(filename, rng):
         ]
     qtime = (time() - t1) / ntimes
     if verbose:
-        print("query time (int, indexed):", round(qtime, 5))
-        print("Mrows/s:", round((nrows / 1000.) / qtime, 5))
+        print(f"query time (int, indexed): {qtime:.5f}")
+        print(f"Mrows/s: {nrows / 1000. / qtime:.5f}")
         print(results)
     # Query for floating columns
     # Query for non-indexed column
@@ -111,8 +111,8 @@ def query_db(filename, rng):
             ]
         qtime = (time() - t1) / ntimes
         if verbose:
-            print("query time (float, not indexed):", round(qtime, 5))
-            print("Mrows/s:", round((nrows / 1000.) / qtime, 5))
+            print(f"query time (float, not indexed): {qtime:.5f}")
+            print(f"Mrows/s: {nrows / 1000. / qtime:.5f}")
             print(results)
     # Query for indexed column
     t1 = time()
@@ -122,8 +122,8 @@ def query_db(filename, rng):
                    table.where(rng[0] + i <= table.cols.col4 <= rng[1] + i)]
     qtime = (time() - t1) / ntimes
     if verbose:
-        print("query time (float, indexed):", round(qtime, 5))
-        print("Mrows/s:", round((nrows / 1000.) / qtime, 5))
+        print(f"query time (float, indexed): {qtime:.5f}")
+        print(f"Mrows/s: {nrows / 1000. / qtime:.5f}")
         print(results)
     close_db(con)
 
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     except:
         psyco_imported = 0
 
-    usage = """usage: %s [-v] [-p] [-m] [-c] [-q] [-i] [-z complevel] [-l complib] [-R range] [-n nrows] file
+    usage = f"""usage: {sys.argv[0]} [-v] [-p] [-m] [-c] [-q] [-i] [-z complevel] [-l complib] [-R range] [-n nrows] file
             -v verbose
             -p use "psyco" if available
             -m use random values to fill the table
@@ -151,7 +151,7 @@ if __name__ == "__main__":
             -l use complib for compression (zlib used by default)
             -R select a range in a field in the form "start,stop" (def "0,10")
             -n sets the number of rows (in krows) in each table
-            \n""" % sys.argv[0]
+            \n"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'vpmcqiz:l:R:n:')
@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     if docreate:
         if verbose:
-            print("writing %s krows" % nrows)
+            print(f"writing {nrows} krows")
         if psyco_imported and usepsyco:
             psyco.bind(create_db)
         nrows *= 1000

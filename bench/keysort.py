@@ -26,7 +26,7 @@ for dtype1 in ('S6', 'b1',
         t1 = time()
         keysort(a, b)
         tks = time() - t1
-        print("keysort time-->", tks, "    {:.2f}x".format(tref / tks))
+        print(f"keysort time--> {tks}     {tref / tks:.2f}x")
         assert numpy.alltrue(a == e)
         #assert numpy.alltrue(b == d)
         assert numpy.alltrue(f == d)

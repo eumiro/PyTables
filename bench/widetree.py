@@ -28,8 +28,8 @@ class WideTreeTestCase(unittest.TestCase):
         maxchilds = 1000
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_wideTree..." % self.__class__.__name__)
-            print("Maximum number of childs tested :", maxchilds)
+            print(f"Running {self.__class__.__name__}.test00_wideTree...")
+            print(f"Maximum number of childs tested : {maxchilds}")
         # Open a new empty HDF5 file
         #file = tempfile.mktemp(".h5")
         file = "test_widetree.h5"
@@ -39,12 +39,12 @@ class WideTreeTestCase(unittest.TestCase):
             print("Children writing progress: ", end=' ')
         for child in range(maxchilds):
             if verbose:
-                print("%3d," % (child), end=' ')
+                print(f"{child:3d},", end=' ')
             a = [1, 1]
-            fileh.create_group(fileh.root, 'group' + str(child),
-                               "child: %d" % child)
-            fileh.create_array("/group" + str(child), 'array' + str(child),
-                               a, "child: %d" % child)
+            fileh.create_group(fileh.root, f"group{child}",
+                               f"child: {child}")
+            fileh.create_array(f"/group{child}", f'array{child}',
+                               a, f"child: {child}")
         if verbose:
             print()
         # Close the file
@@ -53,8 +53,9 @@ class WideTreeTestCase(unittest.TestCase):
         t1 = time.time()
         # Open the previous HDF5 file in read-only mode
         fileh = open_file(file, mode="r")
-        print("\nTime spent opening a file with %d groups + %d arrays: "
-              "%s s" % (maxchilds, maxchilds, time.time() - t1))
+        print(
+            f"\nTime spent opening a file with {maxchilds} groups + "
+            f"{maxchilds} arrays: {time.time() - t1} s")
         if verbose:
             print("\nChildren reading progress: ", end=' ')
         # Close the file
@@ -77,8 +78,8 @@ class WideTreeTestCase(unittest.TestCase):
         maxchilds = 1000
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_wideTree..." % self.__class__.__name__)
-            print("Maximum number of childs tested :", maxchilds)
+            print(f"Running {self.__class__.__name__}.test00_wideTree...")
+            print(f"Maximum number of childs tested : {maxchilds}")
         # Open a new empty HDF5 file
         file = tempfile.mktemp(".h5")
         #file = "test_widetree.h5"
@@ -88,9 +89,8 @@ class WideTreeTestCase(unittest.TestCase):
             print("Children writing progress: ", end=' ')
         for child in range(maxchilds):
             if verbose:
-                print("%3d," % (child), end=' ')
-            fileh.create_group(fileh.root, 'group' + str(child),
-                               "child: %d" % child)
+                print(f"{child:3d},", end=' ')
+            fileh.create_group(fileh.root, f"group{child}", f"child: {child}")
         if verbose:
             print()
         # Close the file
@@ -99,8 +99,7 @@ class WideTreeTestCase(unittest.TestCase):
         t1 = time.time()
         # Open the previous HDF5 file in read-only mode
         fileh = open_file(file, mode="r")
-        print("\nTime spent opening a file with %d groups: %s s" %
-              (maxchilds, time.time() - t1))
+        print(f"\nTime spent opening a file with {maxchilds} groups: {time.time() - t1} s")
         # Close the file
         fileh.close()
         # Then, delete the file

@@ -187,10 +187,10 @@ class Expr:
                 if hasattr(var, "dtype"):
                     # Quacks like a NumPy object
                     continue
-                raise TypeError("Unsupported variable type: %r" % var)
+                raise TypeError(f"Unsupported variable type: {var!r}")
             objname = var.__class__.__name__
             if objname not in ("Array", "CArray", "EArray", "Column"):
-                raise TypeError("Unsupported variable type: %r" % var)
+                raise TypeError(f"Unsupported variable type: {var}")
 
         # NumPy arrays to be copied? (we don't need to worry about
         # PyTables objects, as the reads always return contiguous and
@@ -291,22 +291,22 @@ class Expr:
             elif uservars is None and var in user_globals:
                 val = user_globals[var]
             else:
-                raise NameError("name ``%s`` is not defined" % var)
+                raise NameError(f"name ``{var}`` is not defined")
 
             # Check the value.
             if hasattr(val, 'dtype') and val.dtype.str[1:] == 'u8':
                 raise NotImplementedError(
-                    "variable ``%s`` refers to "
-                    "a 64-bit unsigned integer object, that is "
-                    "not yet supported in expressions, sorry; " % var)
+                    f"variable ``{var}`` refers to "
+                    f"a 64-bit unsigned integer object, that is "
+                    f"not yet supported in expressions, sorry; ")
             elif hasattr(val, '_v_colpathnames'):  # nested column
                 # This branch is never reached because the compile step
                 # above already raise a ``TypeError`` for nested
                 # columns, but that could change in the future.  So it
                 # is best to let this here.
                 raise TypeError(
-                    "variable ``%s`` refers to a nested column, "
-                    "not allowed in expressions" % var)
+                    f"variable ``{var}`` refers to a nested column, "
+                    f"not allowed in expressions")
             reqvars[var] = val
         return reqvars
 
@@ -399,14 +399,15 @@ class Expr:
             # If rowsize is too large, issue a Performance warning
             maxrowsize = BUFFER_TIMES * buffersize
             if rowsize > maxrowsize:
-                warnings.warn("""\
-The object ``%s`` is exceeding the maximum recommended rowsize (%d
-bytes); be ready to see PyTables asking for *lots* of memory and
-possibly slow I/O.  You may want to reduce the rowsize by trimming the
-value of dimensions that are orthogonal (and preferably close) to the
-*leading* dimension of this object."""
-                              % (object, maxrowsize),
-                              PerformanceWarning)
+                warnings.warn(
+                    f"The object ``{object}`` is exceeding the maximum "
+                    f"recommended rowsize ({maxrowsize} bytes); be ready "
+                    f"to see PyTables asking for *lots* of memory and "
+                    f"possibly slow I/O.  You may want to reduce the rowsize "
+                    f"by trimming the value of dimensions that are "
+                    f"orthogonal (and preferably close) to the *leading* "
+                    f"dimension of this object.",
+                    PerformanceWarning)
 
         return nrowsinbuf
 

@@ -74,7 +74,7 @@ class CreateColTestCase(TestCase):
     def test02b_invalidDtypeTooNarrow(self):
         """Describing an enumerated column with a too narrow type."""
 
-        colors = ['e%d' % i for i in range(300)]
+        colors = [f'e{i}' for i in range(300)]
         self.assertRaises(TypeError, self._createCol, colors, 'e0', 'uint8')
 
     def test03a_validShapeMD(self):
@@ -172,7 +172,7 @@ class CreateAtomTestCase(TestCase):
     def test02b_invalidDtypeTooNarrow(self):
         """Describing an enumerated atom with a too narrow type."""
 
-        colors = ['e%d' % i for i in range(300)]
+        colors = [f'e{i}' for i in range(300)]
         self.assertRaises(TypeError, self._createAtom, colors, 'red', 'uint8')
 
     def test03a_validShapeMD(self):
@@ -295,9 +295,8 @@ class EnumTableTestCase(common.TempFileMixin, TestCase):
         tbl.flavor = 'python'
         read = tbl.read()
         common.verbosePrint(
-            "* appended value: %s\n"
-            "* read value: %s\n"
-            % (appended, read))
+            f"* appended value: {appended}\n"
+            f"* read value: {read}\n")
         self.assertEqual(appended, read, "Written and read values differ.")
 
     def test03_setitem(self):
@@ -318,9 +317,8 @@ class EnumTableTestCase(common.TempFileMixin, TestCase):
         tbl.flavor = 'python'
         read = tbl.read()
         common.verbosePrint(
-            "* written value: %s\n"
-            "* read value: %s\n"
-            % (written, read))
+            f"* written value: {written}\n"
+            f"* read value: {read}\n")
         self.assertEqual(written, read, "Written and read values differ.")
 
     def test04_multidim(self):
@@ -597,9 +595,8 @@ class EnumVLArrayTestCase(common.TempFileMixin, TestCase):
         vlarr.flush()
         read = vlarr.read()
         common.verbosePrint(
-            "* appended value: %s\n"
-            "* read value: %s\n"
-            % (appended, read))
+            f"* appended value: {appended}\n"
+            f"* read value: {read}\n")
         self.assertEqual(appended, read, "Written and read values differ.")
 
     def test02_appendMD(self):
@@ -640,9 +637,8 @@ class EnumVLArrayTestCase(common.TempFileMixin, TestCase):
         vlarr[0] = written
         read = vlarr.read()
         common.verbosePrint(
-            "* written value: %s\n"
-            "* read value: %s\n"
-            % (written, read))
+            f"* written value: {written}\n"
+            f"* read value: {read}\n")
         self.assertEqual(written, read[0], "Written and read values differ.")
 
 

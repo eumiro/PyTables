@@ -32,7 +32,7 @@ with tables.open_file(FNAME, mode="w", driver=DRIVER, **DRIVER_PROPS) as f:
     group = f.create_group("/", "foo", "foo desc")
     table = f.create_table(group, "bar", FooBar, "bar desc")
     for i in range(5):
-        table.row["tag"] = "t%d" % i
+        table.row["tag"] = f"t{i}"
         table.row["data"] = numpy.random.random_sample(DATA_SHAPE)
         table.row.append()
     table.flush()

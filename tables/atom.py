@@ -74,15 +74,14 @@ def split_type(type):
 
     match = _type_re.match(type)
     if not match:
-        raise ValueError("malformed type: %r" % type)
+        raise ValueError(f"malformed type: {type!r}")
     kind, precision = match.groups()
     itemsize = None
     if precision:
         precision = int(precision)
         itemsize, remainder = divmod(precision, 8)
         if remainder:  # 0 could be a valid item size
-            raise ValueError("precision must be a multiple of 8: %d"
-                             % precision)
+            raise ValueError(f"precision must be a multiple of 8: {precision}")
     return (kind, itemsize)
 
 
@@ -90,9 +89,8 @@ def split_type(type):
 # =================
 def _invalid_itemsize_error(kind, itemsize, itemsizes):
     isizes = sorted(itemsizes)
-    return ValueError("invalid item size for kind ``%s``: %r; "
-                      "it must be one of ``%r``"
-                      % (kind, itemsize, isizes))
+    return ValueError(f"invalid item size for kind ``{kind}``: {itemsize!r}; "
+                      f"it must be one of ``{isizes!r}``")
 
 
 def _abstract_atom_init(deftype, defvalue):
@@ -117,14 +115,12 @@ def _normalize_shape(shape):
 
     if isinstance(shape, (numpy.integer, int)):
         if shape < 1:
-            raise ValueError("shape value must be greater than 0: %d"
-                             % shape)
+            raise ValueError(f"shape value must be greater than 0: {shape}")
         shape = (shape,)  # N is a shorthand for (N,)
     try:
         shape = tuple(shape)
     except TypeError:
-        raise TypeError("shape must be an integer or sequence: %r"
-                        % (shape,))
+        raise TypeError(f"shape must be an integer or sequence: {shape!r}")
 
     # XXX Get from HDF5 library if possible.
     # HDF5 does not support ranks greater than 32
@@ -374,11 +370,9 @@ class Atom(metaclass=MetaAtom):
         """
         basedtype = dtype.base
         if basedtype.names:
-            raise ValueError("compound data types are not supported: %r"
-                             % dtype)
+            raise ValueError(f"compound data types are not supported: {dtype!r}")
         if basedtype.shape != ():
-            raise ValueError("nested data types are not supported: %r"
-                             % dtype)
+            raise ValueError(f"nested data types are not supported: {dtype!r}")
         if basedtype.kind == 'S':  # can not reuse something like 'string80'
             itemsize = basedtype.itemsize
             return cls.from_kind('string', itemsize, dtype.shape, dflt)
@@ -461,15 +455,14 @@ class Atom(metaclass=MetaAtom):
         # too hard-wired, but I couldn't come up with something
         # smarter.  -- Ivan (2007-02-08)
         if kind in ['enum']:
-            raise ValueError("the ``%s`` kind is not supported; "
-                             "please use the appropriate constructor"
-                             % kind)
+            raise ValueError(
+                f"the ``{kind}`` kind is not supported; "
+                f"please use the appropriate constructor")
         # If no `itemsize` is given, try to get the default type of the
         # kind (which has a fixed item size).
         if itemsize is None:
             if kind not in deftype_from_kind:
-                raise ValueError("no default item size for kind ``%s``"
-                                 % kind)
+                raise ValueError(f"no default item size for kind ``{kind}``")
             type_ = deftype_from_kind[kind]
             kind, itemsize = split_type(type_)
         kdata = atom_map[kind]
@@ -511,9 +504,9 @@ class Atom(metaclass=MetaAtom):
     # ~~~~~~~~~~~~~~~
     def __init__(self, nptype, shape, dflt):
         if not hasattr(self, 'type'):
-            raise NotImplementedError("``%s`` is an abstract class; "
-                                      "please use one of its subclasses"
-                                      % self.__class__.__name__)
+            raise NotImplementedError(
+                f"``{self.__class__.__name__}`` is an abstract class; "
+                f"please use one of its subclasses")
         self.shape = shape = _normalize_shape(shape)
         """The shape of the atom (a tuple for scalar atoms)."""
         # Curiously enough, NumPy isn't generally able to accept NumPy
@@ -621,10 +614,10 @@ class StringAtom(Atom):
 
     def __init__(self, itemsize, shape=(), dflt=_defvalue):
         if not hasattr(itemsize, '__int__') or int(itemsize) < 0:
-            raise ValueError("invalid item size for kind ``%s``: %r; "
-                             "it must be a positive integer"
-                             % ('string', itemsize))
-        Atom.__init__(self, 'S%d' % itemsize, shape, dflt)
+            raise ValueError(
+                f"invalid item size for kind ``string``: {itemsize}; "
+                f"it must be a positive integer")
+        Atom.__init__(self, f'S{itemsize:d}', shape, dflt)
 
 
 class BoolAtom(Atom):
@@ -673,15 +666,15 @@ def _create_numeric_class(baseclass, itemsize):
     """Create a numeric atom class with the given `baseclass` and an
     `itemsize`."""
 
-    prefix = '%s%d' % (baseclass.prefix(), itemsize * 8)
+    prefix = f'{baseclass.prefix()}{itemsize * 8}'
     type_ = prefix.lower()
     classdict = {'itemsize': itemsize, 'type': type_,
-                 '__doc__': "Defines an atom of type ``%s``." % type_}
+                 '__doc__': f"Defines an atom of type ``{type_}``."}
 
     def __init__(self, shape=(), dflt=baseclass._defvalue):
         Atom.__init__(self, self.type, shape, dflt)
     classdict['__init__'] = __init__
-    return type('%sAtom' % prefix, (baseclass,), classdict)
+    return type(f'{prefix}Atom', (baseclass,), classdict)
 
 
 Int8Atom = _create_numeric_class(IntAtom, 1)
@@ -742,7 +735,7 @@ class ComplexAtom(Atom):
     def __init__(self, itemsize, shape=(), dflt=_defvalue):
         if itemsize not in self._isizes:
             raise _invalid_itemsize_error('complex', itemsize, self._isizes)
-        self.type = '%s%d' % (self.kind, itemsize * 8)
+        self.type = f'{self.kind}{itemsize * 8}'
         Atom.__init__(self, self.type, shape, dflt)
 
 
@@ -908,8 +901,8 @@ class EnumAtom(Atom):
         """Check the `base` storage atom."""
 
         if base.kind == 'enum':
-            raise TypeError("can not use an enumerated atom "
-                            "as a storage atom: %r" % base)
+            raise TypeError(f"can not use an enumerated atom "
+                            f"as a storage atom: {base!r}")
 
         # Check whether the storage atom can represent concrete values
         # in the enumeration...
@@ -987,8 +980,8 @@ class EnumAtom(Atom):
         Atom.__init__(self, basedtype, shape, default)
 
     def __repr__(self):
-        return ('EnumAtom(enum=%r, dflt=%r, base=%r, shape=%r)'
-                % (self.enum, self._defname, self.base, self.shape))
+        return (f'EnumAtom(enum={self.enum!r}, dflt={self._defname!r}, '
+                f'base={self.base!r}, shape={self.shape})')
 
     __eq__ = _cmp_dispatcher('_is_equal_to_enumatom')
 
@@ -1051,7 +1044,7 @@ class PseudoAtom:
     """
 
     def __repr__(self):
-        return '%s()' % self.__class__.__name__
+        return f'{self.__class__.__name__}()'
 
     def toarray(self, object_):
         """Convert an `object_` into an array of base atoms."""
@@ -1179,7 +1172,7 @@ class VLUnicodeAtom(_BufferedAtom):
         length = len(array)
         if length == 0:
             return ''  # ``array.view('U0')`` raises a `TypeError`
-        return array.view('U%d' % length).item()
+        return array.view(f'U{length}').item()
 
 
 class ObjectAtom(_BufferedAtom):

@@ -47,7 +47,7 @@ particle = table.row
 # Fill the table with 10 particles
 for i in range(10):
     # First, assign the values to the Particle record
-    particle['name'] = 'Particle: %6d' % (i)
+    particle['name'] = f'Particle: {i:6d}'
     particle['TDCcount'] = i % 256
     particle['ADCcount'] = (i * 256) % (1 << 16)
     particle['grid_i'] = i
@@ -63,9 +63,9 @@ table.flush()
 
 # Get actual data from table. We are interested in column pressure.
 pressure = [p['pressure'] for p in table.iterrows()]
-print("Last record ==>", pressure)
-print("Column pressure ==>", np.array(pressure))
-print("Total records in table ==> ", len(pressure))
+print(f"Last record ==> {pressure}")
+print(f"Column pressure ==> {np.array(pressure)}")
+print(f"Total records in table ==>  {len(pressure)}")
 print()
 
 # Create a new group to hold new arrays
@@ -74,21 +74,21 @@ print("columns ==>", gcolumns, pressure)
 # Create an array with this info under '/columns' having a 'list' flavor
 h5file.create_array(gcolumns, 'pressure', pressure,
                     "Pressure column")
-print("gcolumns.pressure type ==> ", gcolumns.pressure.atom.dtype)
+print(f"gcolumns.pressure type ==>  {gcolumns.pressure.atom.dtype}")
 
 # Do the same with TDCcount, but with a numpy object
 TDC = [p['TDCcount'] for p in table.iterrows()]
-print("TDC ==>", TDC)
-print("TDC shape ==>", np.array(TDC).shape)
+print(f"TDC ==> {TDC}")
+print(f"TDC shape ==> {np.array(TDC).shape}")
 h5file.create_array('/columns', 'TDC', np.array(TDC), "TDCcount column")
 
 # Do the same with name column
 names = [p['name'] for p in table.iterrows()]
-print("names ==>", names)
+print(f"names ==> {names}")
 h5file.create_array('/columns', 'name', names, "Name column")
 # This works even with homogeneous tuples or lists (!)
-print("gcolumns.name shape ==>", gcolumns.name.shape)
-print("gcolumns.name type ==> ", gcolumns.name.atom.dtype)
+print(f"gcolumns.name shape ==> {gcolumns.name.shape}")
+print(f"gcolumns.name type ==> {gcolumns.name.atom.dtype}")
 
 print("Table dump:")
 for p in table.iterrows():
@@ -114,7 +114,7 @@ h5file.close()
 h5file = tables.open_file(filename, "a")
 
 # Ok. let's start browsing the tree from this filename
-print("Reading info from filename:", h5file.filename)
+print(f"Reading info from filename: {h5file.filename}")
 print()
 
 # Firstly, list all the groups on tree
@@ -135,43 +135,43 @@ print()
 
 # Get group /detector and print some info on it
 detector = h5file.get_node("/detector")
-print("detector object ==>", detector)
+print(f"detector object ==> {detector}")
 
 # List only leaves on detector
-print("Leaves in group", detector, ":")
+print(f"Leaves in group {detector} :")
 for leaf in h5file.list_nodes("/detector", 'Leaf'):
     print(leaf)
 print()
 
 # List only tables on detector
-print("Tables in group", detector, ":")
+print(f"Tables in group {detector} :")
 for leaf in h5file.list_nodes("/detector", 'Table'):
     print(leaf)
 print()
 
 # List only arrays on detector (there should be none!)
-print("Arrays in group", detector, ":")
+print(f"Arrays in group {detector} :")
 for leaf in h5file.list_nodes("/detector", 'Array'):
     print(leaf)
 print()
 
 # Get "/detector" Group object
 group = h5file.root.detector
-print("/detector ==>", group)
+print(f"/detector ==> {group}")
 
 # Get the "/detector/table
 table = h5file.get_node("/detector/table")
-print("/detector/table ==>", table)
+print(f"/detector/table ==> {table}")
 
 # Get metadata from table
-print("Object:", table)
-print("Table name:", table.name)
-print("Table title:", table.title)
-print("Rows saved on table: %d" % (table.nrows))
+print(f"Object: {table}")
+print(f"Table name: {table.name}")
+print(f"Table title: {table.title}")
+print(f"Rows saved on table: {table.nrows}")
 
 print("Variable names on table with their type:")
 for name in table.colnames:
-    print("  ", name, ':=', table.coldtypes[name])
+    print(f"   {name} := {table.coldtypes[name]}")
 print()
 
 # Read arrays in /columns/names and /columns/pressure
@@ -180,37 +180,37 @@ print()
 pressureObject = h5file.get_node("/columns", "pressure")
 
 # Get some metadata on this object
-print("Info on the object:", pressureObject)
-print("  shape ==>", pressureObject.shape)
-print("  title ==>", pressureObject.title)
-print("  type ==> ", pressureObject.atom.dtype)
-print("  byteorder ==> ", pressureObject.byteorder)
+print(f"Info on the object: {pressureObject}")
+print(f"  shape ==> {pressureObject.shape}")
+print(f"  title ==> {pressureObject.title}")
+print(f"  type ==> {pressureObject.atom.dtype}")
+print(f"  byteorder ==> {pressureObject.byteorder}")
 
 # Read the pressure actual data
 pressureArray = pressureObject.read()
-print("  data type ==>", type(pressureArray))
-print("  data ==>", pressureArray)
+print(f"  data type ==> {type(pressureArray)}")
+print(f"  data ==> {pressureArray}")
 print()
 
 # Get the object in "/columns/names"
 nameObject = h5file.root.columns.name
 
 # Get some metadata on this object
-print("Info on the object:", nameObject)
-print("  shape ==>", nameObject.shape)
-print("  title ==>", nameObject.title)
-print("  type ==> " % nameObject.atom.dtype)
+print(f"Info on the object: {nameObject}")
+print(f"  shape ==> {nameObject.shape}")
+print(f"  title ==> {nameObject.title}")
+print(f"  type ==> {nameObject.atom.dtype}")
 
 
 # Read the 'name' actual data
 nameArray = nameObject.read()
-print("  data type ==>", type(nameArray))
-print("  data ==>", nameArray)
+print(f"  data type ==> {type(nameArray)}")
+print(f"  data ==> {nameArray}")
 
 # Print the data for both arrays
 print("Data on arrays name and pressure:")
 for i in range(pressureObject.shape[0]):
-    print("".join(nameArray[i]), "-->", pressureArray[i])
+    print(f"{''.join(nameArray[i])} --> {pressureArray[i]}")
 print()
 
 
@@ -221,7 +221,7 @@ table = h5file.root.detector.table
 particle = table.row
 for i in range(10, 15):
     # First, assign the values to the Particle record
-    particle['name'] = 'Particle: %6d' % (i)
+    particle['name'] = f'Particle: {i:6d}'
     particle['TDCcount'] = i % 256
     particle['ADCcount'] = (i * 256) % (1 << 16)
     particle['grid_i'] = i
@@ -238,7 +238,7 @@ table.flush()
 print("Columns name and pressure on expanded table:")
 # Print some table columns, for comparison with array data
 for p in table:
-    print(p['name'], '-->', p['pressure'])
+    print(f"{p['name']} --> {p['pressure']}")
 print()
 
 # Put several flavors
@@ -268,15 +268,15 @@ print(table.read(-3, -1))
 
 # Print a recarray in table form
 table = h5file.root.detector.recarray2
-print("recarray2:", table)
-print("  nrows:", table.nrows)
-print("  byteorder:", table.byteorder)
-print("  coldtypes:", table.coldtypes)
-print("  colnames:", table.colnames)
+print(f"recarray2: {table}")
+print(f"  nrows: {table.nrows}")
+print(f"  byteorder: {table.byteorder}")
+print(f"  coldtypes: {table.coldtypes}")
+print(f"  colnames: {table.colnames}")
 
 print(table.read())
 for p in table.iterrows():
-    print(p['f1'], '-->', p['f2'])
+    print(f"{p['f1']} --> {p['f2']}")
 print()
 
 result = [rec['f1'] for rec in table if rec.nrow < 2]

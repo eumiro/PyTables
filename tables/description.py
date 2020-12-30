@@ -171,11 +171,11 @@ class Col(atom.Atom, metaclass=type):
     def _subclass_from_prefix(cls, prefix):
         """Get a column subclass for the given `prefix`."""
 
-        cname = '%sCol' % prefix
+        cname = f'{prefix}Col'
         class_from_prefix = cls._class_from_prefix
         if cname in class_from_prefix:
             return class_from_prefix[cname]
-        atombase = getattr(atom, '%sAtom' % prefix)
+        atombase = getattr(atom, f'{prefix}Atom')
 
         class NewCol(cls, atombase):
             """Defines a non-nested column of a particular type.
@@ -478,8 +478,8 @@ class Description:
                 if name in newdict:
                     # print("Warning!")
                     # special methods &c: copy to newdict, warn about conflicts
-                    warnings.warn("Can't set attr %r in description class %r"
-                                  % (name, self))
+                    warnings.warn(
+                        f"Can't set attr {name!r} in description class {self!r}")
                 else:
                     # print("Special variable!-->", name, classdict[name])
                     newdict[name] = descr
@@ -536,11 +536,11 @@ class Description:
             object = classdict[k]
             newdict[k] = object    # To allow natural naming
             if not isinstance(object, (Col, Description)):
-                raise TypeError('Passing an incorrect value to a table column.'
-                                ' Expected a Col (or subclass) instance and '
-                                'got: "%s". Please make use of the Col(), or '
-                                'descendant, constructor to properly '
-                                'initialize columns.' % object)
+                raise TypeError(
+                   f"Passing an incorrect value to a table column. Expected "
+                   f"a Col (or subclass) instance and got: {object!r}. "
+                   f"Please make use of the Col(), or descendant, "
+                   f"wconstructor to properly initialize columns.")
             object._v_pos = pos  # Set the position of this object
             object._v_parent = self  # The parent description
             pos += 1
@@ -751,15 +751,14 @@ type can only take the parameters 'All', 'Col' or 'Description'.""")
     def __repr__(self):
         """Gives a detailed Description column representation."""
 
-        rep = ['%s\"%s\": %r' %
-               ("  " * self._v_nestedlvl, k, self._v_colobjects[k])
+        rep = [f"{'  ' * self._v_nestedlvl}\"{k}\": {self._v_colobjects[k]!r}"
                for k in self._v_names]
-        return '{\n  %s}' % (',\n  '.join(rep))
+        return "{\n  " + ',\n  '.join(rep) + "}"
 
     def __str__(self):
         """Gives a brief Description representation."""
 
-        return 'Description(%s)' % self._v_nested_descr
+        return f'Description({self._v_nested_descr})'
 
 
 class MetaIsDescription(type):
@@ -858,8 +857,8 @@ def descr_from_dtype(dtype_, ptparams=None):
             col._v_offset = offset
         else:
             raise NotImplementedError(
-                "structured arrays with columns with type description ``%s`` "
-                "are not supported yet, sorry" % dtype)
+                f"structured arrays with columns with type description "
+                f"``{dtype}`` are not supported yet, sorry")
         fields[name] = col
 
     return Description(fields, ptparams=ptparams), fbyteorder
@@ -881,7 +880,7 @@ def dtype_from_descr(descr, byteorder=None, ptparams=None):
     elif isinstance(descr, IsDescription):
         descr = Description(descr.columns, ptparams=ptparams)
     elif not isinstance(descr, Description):
-        raise ValueError('invalid description: %r' % descr)
+        raise ValueError(f'invalid description: {descr!r}')
 
     dtype_ = descr._v_dtype
 

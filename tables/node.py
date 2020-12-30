@@ -378,11 +378,11 @@ class Node(metaclass=MetaNode):
 
         # Check if the node is too deep in the tree.
         if parentdepth >= self._v_maxtreedepth:
-            warnings.warn("""\
-node ``%s`` is exceeding the recommended maximum depth (%d);\
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
-                          % (self._v_pathname, self._v_maxtreedepth),
-                          PerformanceWarning)
+            warnings.warn(
+                f"node ``{self._v_pathname}`` is exceeding the recommended "
+                f"maximum depth ({self._v_maxtreedepth}); be ready to see "
+                f"PyTables asking for *lots* of memory and possibly slow I/O""",
+                PerformanceWarning)
 
         if self._v_pathname != '/':
             file_._node_manager.cache_node(self, self._v_pathname)
@@ -411,10 +411,11 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
 
         # Check if the node is too deep in the tree.
         if newdepth > self._v_maxtreedepth:
-            warnings.warn("""\
-moved descendent node is exceeding the recommended maximum depth (%d);\
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
-                          % (self._v_maxtreedepth,), PerformanceWarning)
+            warnings.warn(
+                f"moved descendent node is exceeding the recommended maximum "
+                f"depth ({self._v_maxtreedepth}); be ready to see PyTables "
+                f"asking for *lots* of memory and possibly slow I/O""",
+                PerformanceWarning)
 
         node_manager = self._v_file._node_manager
         node_manager.rename_node(oldpath, newpath)
@@ -647,8 +648,7 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
             newfile = file_
             newpath = newparent
         else:
-            raise TypeError("new parent is not a node nor a path: %r"
-                            % (newparent,))
+            raise TypeError(f"new parent is not a node nor a path: {newparent}")
 
         # Validity checks on arguments.
         # Is it in the same file?
@@ -782,8 +782,7 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
             dstfile = srcfile
             dstpath = dstparent
         else:
-            raise TypeError("new parent is not a node nor a path: %r"
-                            % (dstparent,))
+            raise TypeError(f"new parent is not a node nor a path: {dstparent}")
 
         # Validity checks on arguments.
         if dstfile is srcfile:
@@ -791,8 +790,8 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
             srcpath = srcparent._v_pathname
             if dstpath == srcpath and dstname == srcname:
                 raise NodeError(
-                    "source and destination nodes are the same node: ``%s``"
-                    % self._v_pathname)
+                    f"source and destination nodes are "
+                    f"the same node: ``{self._v_pathname}``")
 
             # Recursively copying into itself?
             if recursive:
@@ -831,11 +830,11 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
         # However, we need to know Group here.
         # Using class_name_dict avoids a circular import.
         if not isinstance(node, class_name_dict['Node']):
-            raise TypeError("new parent is not a registered node: %s"
-                            % node._v_pathname)
+            raise TypeError(
+                f"new parent is not a registered node: {node._v_pathname}")
         if not isinstance(node, class_name_dict['Group']):
-            raise TypeError("new parent node ``%s`` is not a group"
-                            % node._v_pathname)
+            raise TypeError(
+                f"new parent node ``{node._v_pathname}`` is not a group")
 
 
     def _g_check_not_contains(self, pathname):
@@ -844,16 +843,18 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
         if (mypathname == '/'  # all nodes fall below the root group
            or pathname == mypathname
            or pathname.startswith(mypathname + '/')):
-            raise NodeError("can not move or recursively copy node ``%s`` "
-                            "into itself" % mypathname)
+            raise NodeError(
+               f"can not move or recursively copy node "
+               f"``{mypathname}`` into itself")
 
 
     def _g_maybe_remove(self, parent, name, overwrite):
         if name in parent:
             if not overwrite:
-                raise NodeError("""\
-destination group ``{}`` already has a node named ``{}``; \
-you may want to use the ``overwrite`` argument""".format(parent._v_pathname, name))
+                raise NodeError(
+                    f"destination group ``{parent._v_pathname}`` "
+                    f"already has a node named ``{name}``; "
+                    f"you may want to use the ``overwrite`` argument")
             parent._f_get_child(name)._f_remove(True)
 
 
@@ -868,7 +869,7 @@ you may want to use the ``overwrite`` argument""".format(parent._v_pathname, nam
         if name.startswith('_i_'):
             # This is reserved for table index groups.
             raise ValueError(
-                "node name starts with reserved prefix ``_i_``: %s" % name)
+                f"node name starts with reserved prefix ``_i_``: {name}")
 
 
     # <attribute handling>

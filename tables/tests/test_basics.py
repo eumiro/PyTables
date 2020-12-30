@@ -298,8 +298,9 @@ class OpenFileTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05b_removeGroupRecursively..." %
-                  self.__class__.__name__)
+            print(
+                f"Running {self.__class__.__name__}."
+                f"test05b_removeGroupRecursively...")
 
         # Delete a group with leafs
         self._reopen(mode="r+", node_cache_slots=self.node_cache_slots)
@@ -1213,8 +1214,9 @@ class CheckFileTestCase(common.TempFileMixin, TestCase):
 
         # When file has an HDF5 format, always returns 1
         if common.verbose:
-            print("\nisHDF5File(%s) ==> %d" % (
-                self.h5fname, tables.is_hdf5_file(self.h5fname)))
+            print(
+                f"\nisHDF5File(%{self.h5fname} ==> "
+                f"{tables.is_hdf5_file(self.h5fname)}")
         self.assertEqual(tables.is_hdf5_file(self.h5fname), 1)
 
     def test01_isHDF5File(self):
@@ -1254,7 +1256,7 @@ class CheckFileTestCase(common.TempFileMixin, TestCase):
         # greater
         if common.verbose:
             print()
-            print("\nPyTables format version number ==> %s" % version)
+            print(f"\nPyTables format version number ==> {version}")
         self.assertGreaterEqual(version, "1.0")
 
     def test03_isPyTablesFile(self):
@@ -1266,7 +1268,7 @@ class CheckFileTestCase(common.TempFileMixin, TestCase):
         # negative value
         if common.verbose:
             print()
-            print("\nPyTables format version number ==> %s" % version)
+            print(f"\nPyTables format version number ==> {version}")
         self.assertIsNone(version)
 
     def test04_openGenericHDF5File(self):
@@ -1876,7 +1878,7 @@ class FlavorTestCase(common.TempFileMixin, TestCase):
         """Copying a node with a deleted flavor (see #100)."""
 
         snames = [node._v_name for node in [self.array, self.scalar]]
-        dnames = ['%s_copy' % name for name in snames]
+        dnames = [f'{name}_copy' for name in snames]
         for name in snames:
             node = self.h5file.get_node('/', name)
             del node.flavor
@@ -1889,9 +1891,10 @@ class FlavorTestCase(common.TempFileMixin, TestCase):
                     node = snode.copy('/', dname)
                 elif fmode == 'r':
                     node = self.h5file.get_node('/', dname)
-                self.assertEqual(node.flavor, tables.flavor.internal_flavor,
-                                 "flavor of node ``%s`` is not internal: %r"
-                                 % (node._v_pathname, node.flavor))
+                self.assertEqual(
+                    node.flavor, tables.flavor.internal_flavor,
+                    f"flavor of node ``{node._v_pathname}`` "
+                    f"is not internal: {node.flavor!r}")
 
     def test07_restrict_flavors(self):
         # regression test for gh-163
@@ -2201,7 +2204,7 @@ import tables
 tables.silence_hdf5_messages(False)
 tables.silence_hdf5_messages()
 try:
-    tables.open_file(r'%s')
+    tables.open_file(r'{}')
 except tables.HDF5ExtError, e:
     pass
 """
@@ -2209,7 +2212,7 @@ except tables.HDF5ExtError, e:
         filename = tempfile.mktemp(prefix="hdf5-error-handling-", suffix=".py")
         try:
             with open(filename, 'w') as fp:
-                fp.write(code % filename)
+                fp.write(code.format(filename))
 
             p = subprocess.Popen([sys.executable, filename],
                                  stdout=subprocess.PIPE,
@@ -2226,7 +2229,7 @@ import tables
 tables.silence_hdf5_messages()
 tables.silence_hdf5_messages(False)
 try:
-    tables.open_file(r'%s')
+    tables.open_file(r'{})
 except tables.HDF5ExtError as e:
     pass
 """
@@ -2234,7 +2237,7 @@ except tables.HDF5ExtError as e:
         filename = tempfile.mktemp(prefix="hdf5-error-handling-", suffix=".py")
         try:
             with open(filename, 'w') as fp:
-                fp.write(code % filename)
+                fp.write(code.format(filename))
 
             p = subprocess.Popen([sys.executable, filename],
                                  stdout=subprocess.PIPE,

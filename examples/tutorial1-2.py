@@ -118,8 +118,7 @@ print("Table title:", table.title)
 print("Number of rows in table:", table.nrows)
 print("Table variable names with their type and shape:")
 for name in table.colnames:
-    print(name, ':= {}, {}'.format(table.coldtypes[name],
-                               table.coldtypes[name].shape))
+    print(f'{name} := {table.coldtypes[name]}, {table.coldtypes[name].shape}')
 print()
 
 # Get the object in "/columns pressure"
@@ -175,7 +174,7 @@ particle = table.row
 
 # Append 5 new particles to table
 for i in range(10, 15):
-    particle['name'] = 'Particle: %6d' % (i)
+    particle['name'] = f'Particle: {i:6d}'
     particle['TDCcount'] = i % 256
     particle['ADCcount'] = (i * 256) % (1 << 16)
     particle['grid_i'] = i
@@ -190,64 +189,64 @@ table.flush()
 
 # Print the data using the table iterator:
 for r in table:
-    print("%-16s | %11.1f | %11.4g | %6d | %6d | %8d |" %
-          (r['name'], r['pressure'], r['energy'], r['grid_i'], r['grid_j'],
-           r['TDCcount']))
+    print(
+        f"{r['name']:-16s} | {r['pressure']:11.1f} | {r['energy']:11.4g} | "
+        f"{r['grid_i']:6d} | {r['grid_j']:6d} | {r['TDCcount']:8d} |")
 
 print()
-print("Total number of entries in resulting table:", table.nrows)
+print(f"Total number of entries in resulting table: {table.nrows}")
 
 print()
 print('-**-**-**-**- modify records of a table -**-**-**-**-**-')
 
 # Single cells
 print("First row of readout table.")
-print("Before modif-->", table[0])
+print(f"Before modif--> {table[0]}")
 table.cols.TDCcount[0] = 1
-print("After modifying first row of TDCcount-->", table[0])
+print(f"After modifying first row of TDCcount--> {table[0]}")
 table.cols.energy[0] = 2
-print("After modifying first row of energy-->", table[0])
+print(f"After modifying first row of energy--> {table[0]}")
 
 # Column slices
 table.cols.TDCcount[2:5] = [2, 3, 4]
-print("After modifying slice [2:5] of ADCcount-->", table[0:5])
+print(f"After modifying slice [2:5] of ADCcount--> {table[0:5]}")
 table.cols.energy[1:9:3] = [2, 3, 4]
-print("After modifying slice [1:9:3] of energy-->", table[0:9])
+print(f"After modifying slice [1:9:3] of energy--> {table[0:9]}")
 
 # Modifying complete Rows
 table.modify_rows(start=1, step=3,
                   rows=[(1, 2, 3.0, 4, 5, 6, 'Particle:   None', 8.0),
                         (2, 4, 6.0, 8, 10, 12, 'Particle: None*2', 16.0)])
-print("After modifying the complete third row-->", table[0:5])
+print(f"After modifying the complete third row--> {table[0:5]}")
 
 # Modifying columns inside table iterators
 for row in table.where('TDCcount <= 2'):
     row['energy'] = row['TDCcount'] * 2
     row.update()
-print("After modifying energy column (where TDCcount <=2)-->", table[0:4])
+print(f"After modifying energy column (where TDCcount <=2)--> {table[0:4]}")
 
 print()
 print('-**-**-**-**- modify elements of an array -**-**-**-**-**-')
 
 print("pressure array")
 pressureObject = h5file.root.columns.pressure
-print("Before modif-->", pressureObject[:])
+print(f"Before modif--> {pressureObject[:]}")
 pressureObject[0] = 2
-print("First modif-->", pressureObject[:])
+print(f"First modif--> {pressureObject[:]}")
 pressureObject[1:3] = [2.1, 3.5]
-print("Second modif-->", pressureObject[:])
+print(f"Second modif--> {pressureObject[:]}")
 pressureObject[::2] = [1, 2]
-print("Third modif-->", pressureObject[:])
+print(f"Third modif--> {pressureObject[:]}")
 
 print("name array")
 nameObject = h5file.root.columns.name
-print("Before modif-->", nameObject[:])
+print(f"Before modif--> {nameObject[:]}")
 nameObject[0] = ['Particle:   None']
-print("First modif-->", nameObject[:])
+print(f"First modif--> {nameObject[:]}")
 nameObject[1:3] = ['Particle:      0', 'Particle:      1']
-print("Second modif-->", nameObject[:])
+print(f"Second modif--> {nameObject[:]}")
 nameObject[::2] = ['Particle:     -3', 'Particle:     -5']
-print("Third modif-->", nameObject[:])
+print(f"Third modif--> {nameObject[:]}")
 
 print()
 print('-**-**-**-**- remove records from a table -**-**-**-**-**-')
@@ -259,20 +258,20 @@ table.remove_rows(5, 10)
 print("Some columns in final table:")
 print()
 # Print the headers
-print("%-16s | %11s | %11s | %6s | %6s | %8s |" %
-     ('name', 'pressure', 'energy', 'grid_i', 'grid_j',
-      'TDCcount'))
+print(
+    f"{'name':-16s} | {'pressure':11s} | {'energy':11s} | {'grid_i':6s} | "
+    f"{'grid_j':6s} | {'TDCcount':8s} |")
 
-print("%-16s + %11s + %11s + %6s + %6s + %8s +" %
-      ('-' * 16, '-' * 11, '-' * 11, '-' * 6, '-' * 6, '-' * 8))
+print(" + ".join('-' * w for w in (16, 11, 11, 6, 6, 8, 0)))
+
 # Print the data using the table iterator:
 for r in table.iterrows():
-    print("%-16s | %11.1f | %11.4g | %6d | %6d | %8d |" %
-          (r['name'], r['pressure'], r['energy'], r['grid_i'], r['grid_j'],
-           r['TDCcount']))
+    print(
+        f"{r['name']:-16s} | {r['pressure']:11.1f} | {r['energy']:11.4g} | "
+        f"{r['grid_i']:6d} | {r['grid_j']:6d} | {r['TDCcount']:8d} |")
 
 print()
-print("Total number of entries in final table:", table.nrows)
+print(f"Total number of entries in final table: {table.nrows}")
 
 # Close the file
 h5file.close()

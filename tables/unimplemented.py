@@ -82,8 +82,8 @@ class UnImplemented(hdf5extension.UnImplemented, Leaf):
         """
 
         warnings.warn(
-            "UnImplemented node %r does not know how to copy itself; skipping"
-            % (self._v_pathname,))
+            f"UnImplemented node {self._v_pathname} does not know how to "
+            f"copy itself; skipping")
         return None  # Can you see it?
 
     def _f_copy(self, newparent=None, newname=None,
@@ -102,12 +102,12 @@ class UnImplemented(hdf5extension.UnImplemented, Leaf):
         return None  # Can you see it?
 
     def __repr__(self):
-        return """{}
+        return f"""{self!s}
   NOTE: <The UnImplemented object represents a PyTables unimplemented
-         dataset present in the '{}' HDF5 file.  If you want to see this
-         kind of HDF5 dataset implemented in PyTables, please contact the
-         developers.>
-""".format(str(self), self._v_file.filename)
+         dataset present in the {self._v_file.filename!r} HDF5 file.
+         If you want to see this kind of HDF5 dataset implemented 
+         in PyTables, please contact the developers.>
+"""
 
 
 # Classes reported as H5G_UNKNOWN by HDF5
@@ -149,11 +149,11 @@ class Unknown(Node):
         return f"{pathname} ({classname})"
 
     def __repr__(self):
-        return """%s
+        return f"""{self!s}
   NOTE: <The Unknown object represents a node which is reported as
          unknown by the underlying HDF5 library, but that might be
          supported in more recent HDF5 versions.>
-""" % (str(self))
+"""
 
 
 # These are listed here for backward compatibility with PyTables 0.9.x indexes

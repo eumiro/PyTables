@@ -658,7 +658,7 @@ You may however work around this limitation depending on your case:
 
     for client in clients.where('age > 50'):
         # Note that the following query is different for each client.
-        for bill in bills.where('(client_id == %r) & (price > 200)' % client['id']):
+        for bill in bills.where(f'(client_id == {client["id"]}) & (price > 200)'):
             do something with client['name'] and bill['item_id']
 
   In this example, indexing the ``client_id`` column of ``bills`` could speed up

@@ -163,7 +163,7 @@ Finally the main function of the program:
                 thread.join()
 
         # print results
-        print('Mean: {}'.format(mean_))
+        print(f'Mean: {mean_}')
 
     if __name__ == '__main__':
         main()

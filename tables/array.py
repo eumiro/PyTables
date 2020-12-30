@@ -252,8 +252,8 @@ class Array(hdf5extension.Array, Leaf):
         """
 
         if self.atom.kind != 'enum':
-            raise TypeError("array ``%s`` is not of an enumerated type"
-                            % self._v_pathname)
+            raise TypeError(
+                f"array ``{self._v_pathname}`` is not of an enumerated type")
 
         return self.atom.enum
 
@@ -391,8 +391,8 @@ class Array(hdf5extension.Array, Leaf):
                     stepl[dim] = 1
                     dim += 1
             elif dim >= maxlen:
-                raise IndexError("Too many indices for object '%s'" %
-                                 self._v_pathname)
+                raise IndexError(
+                    f"Too many indices for object {self._v_pathname!r}")
             elif is_idx(key):
                 key = operator.index(key)
 
@@ -409,7 +409,7 @@ class Array(hdf5extension.Array, Leaf):
                 start, stop, step = self._process_range(
                     key.start, key.stop, key.step, dim=dim)
             else:
-                raise TypeError("Non-valid index or slice: %s" % key)
+                raise TypeError(f"Non-valid index or slice: {key!r}")
             if not ellipsis:
                 startl[dim] = start
                 stopl[dim] = stop
@@ -464,9 +464,9 @@ class Array(hdf5extension.Array, Leaf):
             try:
                 num = int(num)
             except TypeError:
-                raise TypeError("Illegal index: %r" % num)
+                raise TypeError(f"Illegal index: {num!r}")
             if num > length - 1:
-                raise IndexError("Index out of bounds: %d" % num)
+                raise IndexError(f"Index out of bounds: {num}")
 
         def expand_ellipsis(args, rank):
             """Expand ellipsis objects and fill in missing axes."""
@@ -512,7 +512,7 @@ class Array(hdf5extension.Array, Leaf):
                 step = int(step)
 
             if step < 1:
-                raise IndexError("Step must be >= 1 (got %d)" % step)
+                raise IndexError(f"Step must be >= 1 (got {step})")
             if stop == start:
                 raise IndexError("Zero-length selections are not allowed")
             if stop < start:
@@ -524,10 +524,10 @@ class Array(hdf5extension.Array, Leaf):
 
             if not 0 <= start <= (length - 1):
                 raise IndexError(
-                    "Start index %s out of range (0-%d)" % (start, length - 1))
+                    f"Start index {start} out of range (0-{length - 1})")
             if not 1 <= stop <= length:
                 raise IndexError(
-                    "Stop index %s out of range (1-%d)" % (stop, length))
+                    f"Stop index {stop} out of range (1-{length - 1})")
 
             count = (stop - start) // step
             if (stop - start) % step != 0:
@@ -535,8 +535,8 @@ class Array(hdf5extension.Array, Leaf):
 
             if start + count > length:
                 raise IndexError(
-                    "Selection out of bounds (%d; axis has %d)" %
-                    (start + count, length))
+                    f"Selection out of bounds ({start + count}; "
+                    f"axis has {length})")
 
             return start, count, step
 
@@ -566,7 +566,7 @@ class Array(hdf5extension.Array, Leaf):
                     mshape.append(len(exp))
                 if len(exp) == 0:
                     raise IndexError(
-                        "Empty selections are not allowed (axis %d)" % idx)
+                        f"Empty selections are not allowed (axis {idx})")
                 elif len(exp) > 1:
                     if list_seen:
                         raise IndexError("Only one selection list is allowed")
@@ -843,9 +843,9 @@ class Array(hdf5extension.Array, Leaf):
             bytes_required = self.rowsize * nrowstoread
             # if buffer is too small, it will segfault
             if bytes_required != out.nbytes:
-                raise ValueError(('output array size invalid, got {} bytes, '
-                                  'need {} bytes').format(out.nbytes,
-                                                           bytes_required))
+                raise ValueError(
+                    f'output array size invalid, got {out.nbytes} bytes, '
+                    f'need {bytes_required} bytes')
             if not out.flags['C_CONTIGUOUS']:
                 raise ValueError('output array not C contiguous')
             arr = out
@@ -891,9 +891,9 @@ class Array(hdf5extension.Array, Leaf):
 
         self._g_check_open()
         if out is not None and self.flavor != 'numpy':
-            msg = ("Optional 'out' argument may only be supplied if array "
-                   "flavor is 'numpy', currently is {}").format(self.flavor)
-            raise TypeError(msg)
+            raise TypeError(
+                f"Optional 'out' argument may only be supplied if array "
+                f"flavor is 'numpy', currently is {self.flavor!r}")
         (start, stop, step) = self._process_range_read(start, stop, step)
         arr = self._read(start, stop, step, out)
         return internal_to_flavor(arr, self.flavor)
@@ -923,14 +923,12 @@ class Array(hdf5extension.Array, Leaf):
     def __repr__(self):
         """This provides more metainfo in addition to standard __str__"""
 
-        return """{}
-  atom := {!r}
-  maindim := {!r}
-  flavor := {!r}
-  byteorder := {!r}
-  chunkshape := {!r}""".format(self, self.atom, self.maindim,
-                         self.flavor, self.byteorder,
-                         self.chunkshape)
+        return f"""{self}
+  atom := {self.atom!r}
+  maindim := {self.maindim!r}
+  flavor := {self.flavor!r}
+  byteorder := {self.byteorder!r}
+  chunkshape := {self.chunkshape!r}"""
 
 
 class ImageArray(Array):

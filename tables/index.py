@@ -583,7 +583,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
             # F. Alted 2008-09-15
             idx = numpy.arange(0, len(arr), dtype="uint32")
         else:
-            idx = numpy.empty(len(arr), "uint%d" % (indsize * 8))
+            idx = numpy.empty(len(arr), f"uint{indsize * 8}")
             lbucket = self.lbucket
             # Fill the idx with the bucket indices
             offset = int(lbucket - ((nrow * (slicesize % lbucket)) % lbucket))
@@ -858,12 +858,12 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
         sortedLR = tmp.sortedLR
         indicesLR = tmp.indicesLR
         sremain = numpy.array([], dtype=self.dtype)
-        iremain = numpy.array([], dtype='u%d' % self.indsize)
+        iremain = numpy.array([], dtype=f'u{self.indsize}')
         starts = numpy.zeros(shape=nslices, dtype=numpy.int_)
         for i in range(nslices):
             # Find the overlapping elements for slice i
             sover = numpy.array([], dtype=self.dtype)
-            iover = numpy.array([], dtype='u%d' % self.indsize)
+            iover = numpy.array([], dtype=f'u{self.indsize}')
             prev_end = ranges[i, 1]
             for j in range(i + 1, nslices):
                 stj = starts[j]
@@ -945,9 +945,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
         # in verbose mode!).
         self.compute_overlaps(self.tmp, "do_complete_sort()", self.verbose)
         if self.verbose:
-            t = round(time() - t1, 4)
-            c = round(perf_counter() - c1, 4)
-            print(f"time: {t}. clock: {c}")
+            print(f"time: {time() - t1:.4f}. clock: {perf_counter() - c1:.4f}")
 
     def swap(self, what, mode=None):
         """Swap chunks or slices using a certain bounds reference."""
@@ -974,9 +972,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
             self.tmp, message, self.verbose)
         rmult = len(mult.nonzero()[0]) / float(len(mult))
         if self.verbose:
-            t = round(time() - t1, 4)
-            c = round(perf_counter() - c1, 4)
-            print(f"time: {t}. clock: {c}")
+            print(f"time: {time() - t1:.4f}. clock: {perf_counter() - c1:.4f}")
         # Check that entropy is actually decreasing
         if what == "chunks" and self.last_tover > 0. and self.last_nover > 0:
             tover_var = (self.last_tover - tover) / self.last_tover
@@ -1224,7 +1220,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
             self.get_neworder(sbounds_idx, sorted, tmp_sorted, sortedLR,
                               nslices, offset, self.dtype)
             self.get_neworder(sbounds_idx, indices, tmp_indices, indicesLR,
-                              nslices, offset, 'u%d' % self.indsize)
+                              nslices, offset, f'u{self.indsize}')
         # Reorder completely the index at slice level
         self.reorder_slices(tmp=True)
 
@@ -1344,7 +1340,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
         # Create the buffer for reordering 2 slices at a time
         ssorted = numpy.empty(shape=ss * 2, dtype=self.dtype)
         sindices = numpy.empty(shape=ss * 2,
-                               dtype=numpy.dtype('u%d' % self.indsize))
+                               dtype=numpy.dtype(f'u{self.indsize}'))
 
         if self.indsize == 8:
             # Bootstrap the process for reordering
@@ -1600,9 +1596,9 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
             if erange > 0:
                 toverlap = soverlap / erange
         if verbose and message != "init":
-            print("toverlap (%s):" % message, toverlap)
-            print("multiplicity:\n", multiplicity, multiplicity.sum())
-            print("overlaps:\n", overlaps, overlaps.sum())
+            print(f"toverlap ({message}): {toverlap}")
+            print(f"multiplicity:\n {multiplicity} {multiplicity.sum()}")
+            print(f"overlaps:\n {overlaps} {overlaps.sum()}")
         noverlaps = overlaps.sum()
         # For full indexes, set the 'is_csi' flag
         if self.indsize == 8 and self._v_file._iswritable():
@@ -1664,7 +1660,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
             if erange > 0:
                 toverlap = soverlap / erange
         if verbose:
-            print("overlaps (%s):" % message, noverlaps, toverlap)
+            print(f"overlaps ({message}): {noverlaps} {toverlap}")
             print(multiplicity)
         # For full indexes, set the 'is_csi' flag
         if self.indsize == 8 and self._v_file._iswritable():
@@ -1690,7 +1686,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
         else:
             values = self.indices
             valuesLR = self.indicesLR
-            buffer_ = numpy.empty(stop - start, dtype="u%d" % self.indsize)
+            buffer_ = numpy.empty(stop - start, dtype=f"u{self.indsize}")
         ss = self.slicesize
         nrow_start = start // ss
         istart = start % ss
@@ -2022,7 +2018,7 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
             start = starts[nslice]
             stop = stops[nslice]
             if stop > start:
-                idx = numpy.empty(shape=stop - start, dtype='u%d' % indsize)
+                idx = numpy.empty(shape=stop - start, dtype=f'u{indsize}')
                 if nslice < nslices:
                     indices._read_index_slice(nslice, start, stop, idx)
                 else:
@@ -2118,45 +2114,37 @@ class Index(NotLoggedMixin, Group, indexesextension.Index):
         """This provides a more compact representation than __repr__"""
 
         # The filters
-        filters = ""
+        filters = []
         if self.filters.complevel:
             if self.filters.shuffle:
-                filters += ", shuffle"
+                filters.append("shuffle")
             if self.filters.bitshuffle:
-                filters += ", bitshuffle"
-            filters += ", {}({})".format(self.filters.complib,
-                                     self.filters.complevel)
-        return "Index(%s, %s%s).is_csi=%s" % \
-               (self.optlevel, self.kind, filters, self.is_csi)
+                filters.append("bitshuffle")
+            filters.append(f"{self.filters.complib}({self.filters.complevel})")
+        return f"Index({self.optlevel}, {self.kind}{', '.join(filters)}).is_csi={self.is_csi}"
 
     def __repr__(self):
         """This provides more metainfo than standard __repr__"""
 
-        cpathname = self.table._v_pathname + ".cols." + self.column.pathname
-        retstr = """{} (Index for column {})
-  optlevel := {}
-  kind := {}
-  filters := {}
-  is_csi := {}
-  nelements := {}
-  chunksize := {}
-  slicesize := {}
-  blocksize := {}
-  superblocksize := {}
-  dirty := {}
-  byteorder := {!r}""".format(self._v_pathname, cpathname,
-                        self.optlevel, self.kind,
-                        self.filters, self.is_csi,
-                        self.nelements,
-                        self.chunksize, self.slicesize,
-                        self.blocksize, self.superblocksize,
-                        self.dirty, self.byteorder)
-        retstr += "\n  sorted := %s" % self.sorted
-        retstr += "\n  indices := %s" % self.indices
-        retstr += "\n  ranges := %s" % self.ranges
-        retstr += "\n  bounds := %s" % self.bounds
-        retstr += "\n  sortedLR := %s" % self.sortedLR
-        retstr += "\n  indicesLR := %s" % self.indicesLR
+        cpathname = f"{self.table._v_pathname}.cols.{self.column.pathname}"
+        retstr = f"""{self._v_pathname} (Index for column {cpathname})
+  optlevel := {self.optlevel}
+  kind := {self.kind}
+  filters := {self.filters}
+  is_csi := {self.is_csi}
+  nelements := {self.nelements}
+  chunksize := {self.chunksize}
+  slicesize := {self.slicesize}
+  blocksize := {self.blocksize}
+  superblocksize := {self.superblocksize}
+  dirty := {self.dirty}
+  byteorder := {self.byteorder!r}
+  sorted := {self.sorted}
+  indices := {self.indices}
+  ranges := {self.ranges}
+  bounds := {self.bounds}
+  sortedLR := {self.sortedLR}
+  indicesLR := {self.indicesLR}"""
         return retstr
 
 
@@ -2166,10 +2154,10 @@ class IndexesDescG(NotLoggedMixin, Group):
 
     def _g_width_warning(self):
         warnings.warn(
-            "the number of indexed columns on a single description group "
-            "is exceeding the recommended maximum (%d); "
-            "be ready to see PyTables asking for *lots* of memory "
-            "and possibly slow I/O" % self._v_max_group_width,
+            f"the number of indexed columns on a single description group "
+            f"is exceeding the recommended maximum ({self._v_max_group_width}); "
+            f"be ready to see PyTables asking for *lots* of memory "
+            f"and possibly slow I/O",
             PerformanceWarning)
 
 
@@ -2194,17 +2182,17 @@ class IndexesTableG(NotLoggedMixin, Group):
 
     def _g_width_warning(self):
         warnings.warn(
-            "the number of indexed columns on a single table "
-            "is exceeding the recommended maximum (%d); "
-            "be ready to see PyTables asking for *lots* of memory "
-            "and possibly slow I/O" % self._v_max_group_width,
+            f"the number of indexed columns on a single table "
+            f"is exceeding the recommended maximum ({self._v_max_group_width}); "
+            f"be ready to see PyTables asking for *lots* of memory "
+            f"and possibly slow I/O",
             PerformanceWarning)
 
 
     def _g_check_name(self, name):
         if not name.startswith('_i_'):
             raise ValueError(
-                "names of index groups must start with ``_i_``: %s" % name)
+                f"names of index groups must start with ``_i_``: {name}")
 
 
     @property

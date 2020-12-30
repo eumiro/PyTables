@@ -248,7 +248,7 @@ def get_tree_str(f, where='/', max_depth=-1, print_class=True,
             # create a PrettyTree representation of this node
             name = node._v_name
             if print_class:
-                name += " (%s)" % node.__class__.__name__
+                name += f" ({node.__class__.__name__})"
 
             labels = []
             pct = 100 * on_disk[path] / total_on_disk
@@ -256,48 +256,45 @@ def get_tree_str(f, where='/', max_depth=-1, print_class=True,
             # if the address of this object has a ref_count > 1, it has
             # multiple hardlinks
             if ref_count[hl_addresses[path]] > 1:
-                name += ', addr=%i, ref=%i/%i' % (
-                    hl_addresses[path], ref_idx[path],
-                    ref_count[hl_addresses[path]]
-                )
+                name += (f', addr={hl_addresses[path]}, '
+                         f'ref={ref_idx[path]}/'
+                         f'{ref_count[hl_addresses[path]]}')
 
             if isinstance(node, tables.link.Link):
-                labels.append('softlink --> %s' % node.target)
+                labels.append(f'softlink --> {node.target}')
 
             elif ref_idx[path] > 1:
-                labels.append('hardlink --> %s'
-                              % hl_targets[hl_addresses[path]])
+                labels.append(f'hardlink --> {hl_targets[hl_addresses[path]]}')
 
             elif isinstance(node, (tables.Array, tables.Table)):
 
                 if print_size:
-                    sizestr = 'mem={}, disk={}'.format(
-                        b2h(in_mem[path]), b2h(on_disk[path]))
+                    sizestr = (f'mem={b2h(in_mem[path])}, '
+                               f'disk={b2h(on_disk[path])}')
                     if print_percent:
-                        sizestr += ' [%4.1f%%]' % pct
+                        sizestr += f' [{pct:4.1f}%]'
                     labels.append(sizestr)
 
                 if print_shape:
-                    labels.append('shape=%s' % repr(node.shape))
+                    labels.append(f'shape={node.shape!r}')
 
                 if print_compression:
                     lib = node.filters.complib
                     level = node.filters.complevel
                     if level:
-                        compstr = '%s(%i)' % (lib, level)
+                        compstr = f'{lib}({level})'
                     else:
                         compstr = 'None'
-                    labels.append('compression=%s' % compstr)
+                    labels.append(f'compression={compstr}')
 
             # if we're at our max recursion depth, we'll print summary
             # information for this branch
             elif depth == max_depth:
-                itemstr = '... %i leaves' % leaf_count[path]
+                itemstr = f'... {leaf_count[path]} leaves'
                 if print_size:
-                    itemstr += ', mem={}, disk={}'.format(
-                        b2h(in_mem[path]), b2h(on_disk[path]))
+                    itemstr += f', mem={b2h(in_mem[path])}, disk={b2h(on_disk[path])}'
                 if print_percent:
-                    itemstr += ' [%4.1f%%]' % pct
+                    itemstr += f' [{pct:4.1f}%]'
                 labels.append(itemstr)
 
             # create a PrettyTree for this node, if one doesn't exist already
@@ -344,11 +341,10 @@ def get_tree_str(f, where='/', max_depth=-1, print_class=True,
         fsize = os.stat(f.filename).st_size
 
         out_str += '-' * 60 + '\n'
-        out_str += 'Total branch leaves:    %i\n' % total_items
-        out_str += 'Total branch size:      {} in memory, {} on disk\n'.format(
-            b2h(total_in_mem), b2h(total_on_disk))
-        out_str += 'Mean compression ratio: %.2f\n' % avg_ratio
-        out_str += 'HDF5 file size:         %s\n' % b2h(fsize)
+        out_str += f'Total branch leaves:    {total_items}\n'
+        out_str += f'Total branch size:      {b2h(total_in_mem)} in memory, {b2h(total_on_disk)} on disk\n'
+        out_str += f'Mean compression ratio: {avg_ratio:.2f}\n'
+        out_str += f'HDF5 file size:         {b2h(fsize)}\n'
         out_str += '-' * 60 + '\n'
 
     return out_str
@@ -415,7 +411,7 @@ class PrettyTree:
         return "\n".join(self.tree_lines())
 
     def __repr__(self):
-        return '<{} at {}>'.format(self.__class__.__name__, hex(id(self)))
+        return f'<{self.__class__.__name__} at 0x{id(self):x}>'
 
 
 def bytes2human(use_si_units=False):

@@ -97,10 +97,11 @@ class HDF5ExtError(RuntimeError):
         try:
             newvalue = envmap[envvalue.upper()]
         except KeyError:
-            warnings.warn("Invalid value for the environment variable "
-                          "'PT_DEFAULT_H5_BACKTRACE_POLICY'.  The default "
-                          "policy for HDF5 back trace management in PyTables "
-                          "will be: '%s'" % oldvalue)
+            warnings.warn(
+                f"Invalid value for the environment variable "
+                f"'PT_DEFAULT_H5_BACKTRACE_POLICY'.  The default policy "
+                f"for HDF5 back trace management in PyTables "
+                f"will be: {oldvalue!r}")
         else:
             cls.DEFAULT_H5_BACKTRACE_POLICY = newvalue
 
@@ -163,7 +164,7 @@ class HDF5ExtError(RuntimeError):
                 msg = super().__str__()
                 msg = f"{bt}\n\n{msg}"
             elif self.h5backtrace[-1][-1]:
-                msg = "{}\n\n{}".format(bt, self.h5backtrace[-1][-1])
+                msg = f"{bt}\n\n{self.h5backtrace[-1][-1]}"
             else:
                 msg = bt
         else:

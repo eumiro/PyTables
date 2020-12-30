@@ -22,20 +22,20 @@ def createFile(filename, ngroups, ntables, nrows, complevel, complib, recsize):
 
     for k in range(ngroups):
         # Create the group
-        group = fileh.create_group("/", 'group%04d' % k, "Group %d" % k)
+        group = fileh.create_group("/", f'group{k:04d}', f"Group {k}")
 
     fileh.close()
 
     # Now, create the tables
     rowswritten = 0
     for k in range(ngroups):
-        fileh = open_file(filename, mode="a", root_uep='group%04d' % k)
+        fileh = open_file(filename, mode="a", root_uep=f'group{k:04d}')
         # Get the group
         group = fileh.root
         for j in range(ntables):
             # Create a table
-            table = fileh.create_table(group, 'table%04d' % j, Test,
-                                       'Table%04d' % j,
+            table = fileh.create_table(group, f'table{j:04d}', Test,
+                                       f'Table{j:04d}',
                                        complevel, complib, nrows)
             # Get the row object associated with the new table
             row = table.row
@@ -62,7 +62,7 @@ def readFile(filename, ngroups, recsize, verbose):
 
     rowsread = 0
     for ngroup in range(ngroups):
-        fileh = open_file(filename, mode="r", root_uep='group%04d' % ngroup)
+        fileh = open_file(filename, mode="r", root_uep=f'group{ngroup:04d}')
         # Get the group
         group = fileh.root
         ntable = 0
@@ -91,9 +91,8 @@ def readFile(filename, ngroups, recsize, verbose):
                     #assert 100 <= row["random"] <= 139.999
                     assert 100 <= row["random"] <= 140
                 except:
-                    print("Error in group: %d, table: %d, row: %d" %
-                          (ngroup, ntable, nrow))
-                    print("Record ==>", row)
+                    print(f"Error in group: {ngroup}, table: {ntable}, row: {nrow}")
+                    print(f"Record ==> {row}")
                 time_1 = row["time"]
                 nrow += 1
 
@@ -127,7 +126,7 @@ if __name__ == "__main__":
     except:
         psyco_imported = 0
 
-    usage = """usage: %s [-d debug] [-v level] [-p] [-r] [-w] [-l complib] [-c complevel] [-g ngroups] [-t ntables] [-i nrows] file
+    usage = f"""usage: {sys.argv[0]} [-d debug] [-v level] [-p] [-r] [-w] [-l complib] [-c complevel] [-g ngroups] [-t ntables] [-i nrows] file
     -d debugging level
     -v verbosity level
     -p use "psyco" if available
@@ -206,14 +205,14 @@ if __name__ == "__main__":
                                     complevel, complib, recsize)
         t2 = time.time()
         cpu2 = time.perf_counter()
-        tapprows = round(t2 - t1, 3)
-        cpuapprows = round(cpu2 - cpu1, 3)
-        tpercent = int(round(cpuapprows / tapprows, 2) * 100)
-        print("Rows written:", rowsw, " Row size:", rowsz)
-        print("Time writing rows: %s s (real) %s s (cpu)  %s%%" %
-              (tapprows, cpuapprows, tpercent))
-        print("Write rows/sec: ", int(rowsw / float(tapprows)))
-        print("Write KB/s :", int(rowsw * rowsz / (tapprows * 1024)))
+        tapprows = t2 - t1
+        cpuapprows = cpu2 - cpu1
+        print(f"Rows written: {rowsw}  Row size: {rowsz}")
+        print(
+            f"Time writing rows: {tapprows:.3f} s (real) "
+            f"{cpuapprows:.3f} s (cpu)  {cpuapprows / tapprows:.0%}")
+        print(f"Write rows/sec:  {rowsw / tapprows}")
+        print(f"Write KB/s : {rowsw * rowsz / (tapprows * 1024):.0f}")
 
     if testread:
         t1 = time.time()
@@ -223,14 +222,14 @@ if __name__ == "__main__":
         (rowsr, rowsz, bufsz) = readFile(file, ngroups, recsize, verbose)
         t2 = time.time()
         cpu2 = time.perf_counter()
-        treadrows = round(t2 - t1, 3)
-        cpureadrows = round(cpu2 - cpu1, 3)
-        tpercent = int(round(cpureadrows / treadrows, 2) * 100)
-        print("Rows read:", rowsr, " Row size:", rowsz, "Buf size:", bufsz)
-        print("Time reading rows: %s s (real) %s s (cpu)  %s%%" %
-              (treadrows, cpureadrows, tpercent))
-        print("Read rows/sec: ", int(rowsr / float(treadrows)))
-        print("Read KB/s :", int(rowsr * rowsz / (treadrows * 1024)))
+        treadrows = t2 - t1
+        cpureadrows = cpu2 - cpu1
+        print(f"Rows read: {rowsw}  Row size: {rowsz}, Buf size: {bufsz}")
+        print(
+            f"Time reading rows: {treadrows:.3f} s (real) "
+            f"{cpureadrows:.3f} s (cpu)  {cpureadrows / treadrows:.0%}")
+        print(f"Read rows/sec:  {rowsr / treadrows}")
+        print(f"Read KB/s : {rowsr * rowsz / (treadrows * 1024):.0f}")
 
     # Show the dirt
     if debug > 1:

@@ -50,7 +50,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_simple..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00_simple...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -84,7 +84,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_twice..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_twice...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -119,7 +119,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_twice2..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_twice...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -172,8 +172,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_6times3marks..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03_6times3marks...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -266,8 +265,8 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04_6times3marksro..." %
-                  self.__class__.__name__)
+            print(
+                f"Running {self.__class__.__name__}.test04_6times3marksro...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -344,7 +343,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05_destructive..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05_desctructive...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -378,8 +377,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05b_destructive..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05b_desctructive...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -422,8 +420,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05c_destructive..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05c_desctructive...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -464,8 +461,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05d_destructive..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05d_desctructive...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -504,8 +500,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05e_destructive..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05e_desctructive...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -538,8 +533,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05f_destructive..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05f_desctructive...")
 
         self.h5file.enable_undo()
         self.h5file.create_array('/', 'newarray', [1])
@@ -560,7 +554,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test06_totalunwind..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test06_totalunwind...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -581,7 +575,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test07_totalunwind..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test07_totalunwind...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -611,7 +605,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test08_marknames..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test08_marknames...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -666,7 +660,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test08_initialmark..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test08_initialmark...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -700,7 +694,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test09_marknames..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test09_marknames...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -741,7 +735,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test10_goto..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test10_goto...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -798,7 +792,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test10_gotoint..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test10_gotoint...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -863,7 +857,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test11_contiguous..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test11_contiguous...")
 
         self.h5file.enable_undo()
         m1 = self.h5file.mark()
@@ -889,7 +883,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test12_keepMark..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test12_keepMark...")
 
         self.h5file.enable_undo()
         self.h5file.create_array('/', 'newarray1', [1])
@@ -910,8 +904,9 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test13_severalEnableDisable..." %
-                  self.__class__.__name__)
+            print(
+                f"Running {self.__class__.__name__}."
+                f"test13_severalEnableDisable...")
 
         self.h5file.enable_undo()
         self.h5file.create_array('/', 'newarray1', [1])
@@ -1010,7 +1005,7 @@ class CreateArrayTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1037,7 +1032,7 @@ class CreateArrayTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1069,7 +1064,7 @@ class CreateArrayTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1106,7 +1101,7 @@ class CreateArrayTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1177,7 +1172,7 @@ class CreateGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1204,7 +1199,7 @@ class CreateGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1236,7 +1231,7 @@ class CreateGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1273,7 +1268,7 @@ class CreateGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1384,7 +1379,7 @@ class RenameNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1413,7 +1408,7 @@ class RenameNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1452,7 +1447,7 @@ class RenameNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1492,7 +1487,7 @@ class RenameNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1521,7 +1516,7 @@ class RenameNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1598,7 +1593,7 @@ class MoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1628,7 +1623,7 @@ class MoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1668,7 +1663,7 @@ class MoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1709,7 +1704,7 @@ class MoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1739,7 +1734,7 @@ class MoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1816,7 +1811,7 @@ class RemoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1842,7 +1837,7 @@ class RemoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00b...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1873,7 +1868,7 @@ class RemoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00c..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00c...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1907,7 +1902,7 @@ class RemoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -1939,7 +1934,7 @@ class RemoveNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -2010,7 +2005,7 @@ class CopyNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_copyLeaf..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00_copyLeaf...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2036,7 +2031,7 @@ class CopyNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00b_copyTable..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00b_copyTable...")
 
         # open the do/undo
         self.h5file.enable_undo()
@@ -2093,7 +2088,7 @@ class CopyNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_copyGroup..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_copyGroup...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2126,8 +2121,9 @@ class CopyNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_copyLeafOverwrite..." %
-                  self.__class__.__name__)
+            print(
+                f"Running {self.__class__.__name__}."
+                f"test02_copyLeafOverwrite...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2156,8 +2152,7 @@ class CopyNodeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_copyChildren..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03_copyChildren...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2216,7 +2211,7 @@ class ComplexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2267,7 +2262,7 @@ class ComplexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2307,7 +2302,7 @@ class ComplexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2352,7 +2347,7 @@ class ComplexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2403,7 +2398,7 @@ class ComplexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03b...")
 
         # Enable undo/redo.
         self.h5file.enable_undo()
@@ -2452,7 +2447,7 @@ class AttributesTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_setAttr..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00_setAttr...")
 
         array = self.h5file.root.array
         attrs = array.attrs
@@ -2472,8 +2467,8 @@ class AttributesTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_setAttrExisting..." %
-                  self.__class__.__name__)
+            print(
+                f"Running {self.__class__.__name__}.test01_setAttrExisting...")
 
         array = self.h5file.root.array
         attrs = array.attrs
@@ -2494,7 +2489,7 @@ class AttributesTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_delAttr..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_delAttr...")
 
         array = self.h5file.root.array
         attrs = array.attrs
@@ -2513,8 +2508,7 @@ class AttributesTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_copyNodeAttrs..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03_copyNodeAttrs...")
 
         rattrs = self.h5file.root._v_attrs
         rattrs.attr_0 = 0
@@ -2545,7 +2539,7 @@ class AttributesTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04_replaceNode..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04_replaceNode...")
 
         array = self.h5file.root.array
         attrs = array.attrs

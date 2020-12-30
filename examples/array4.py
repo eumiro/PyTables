@@ -39,15 +39,15 @@ for i, dtype in enumerate(dtypes, 1):
     print("Info from dataset:", repr(dset))
     # Read the actual data in array
     b = dset.read()
-    print("Array b read from file. Shape ==>", b.shape, end=' ')
-    print(". Dtype ==> %s" % b.dtype)
+    print(f"Array b read from file. Shape ==> {b.shape}", end=' ')
+    print(f". Dtype ==> {b.dtype}")
     # Test if the original and read arrays are equal
     if np.allclose(a, b):
         print("Good: Read array is equal to the original")
     else:
         print("Error: Read array and the original differs!")
     # Iterate over the next group
-    group = getattr(group, 'group' + str(i + 1))
+    group = getattr(group, f'group{i + 1}')
 
 # Close the file
 fileh.close()

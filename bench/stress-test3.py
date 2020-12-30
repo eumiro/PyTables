@@ -29,7 +29,7 @@ def createFileArr(filename, ngroups, ntables, nrows):
 
     for k in range(ngroups):
         # Create the group
-        fileh.create_group("/", 'group%04d' % k, "Group %d" % k)
+        fileh.create_group("/", f'group{k:04d}', f"Group {k}")
 
     fileh.close()
 
@@ -40,16 +40,16 @@ def readFileArr(filename, ngroups, recsize, verbose):
 
     rowsread = 0
     for ngroup in range(ngroups):
-        fileh = open_file(filename, mode="r", root_uep='group%04d' % ngroup)
+        fileh = open_file(filename, mode="r", root_uep=f'group{ngroup:04d}')
         # Get the group
         group = fileh.root
         ntable = 0
         if verbose:
-            print("Group ==>", group)
+            print(f"Group ==> {group}")
         for table in fileh.list_nodes(group, 'Array'):
             if verbose > 1:
-                print("Array ==>", table)
-                print("Rows in", table._v_pathname, ":", table.shape)
+                print(f"Array ==> {table}")
+                print(f"Rows in {table._v_pathname}: {table.shape}")
 
             arr = table.read()
 
@@ -71,20 +71,20 @@ def createFile(filename, ngroups, ntables, nrows, complevel, complib, recsize):
 
     for k in range(ngroups):
         # Create the group
-        group = fileh.create_group("/", 'group%04d' % k, "Group %d" % k)
+        group = fileh.create_group("/", f'group{k:04d}', f"Group {k}")
 
     fileh.close()
 
     # Now, create the tables
     rowswritten = 0
     for k in range(ngroups):
-        fileh = open_file(filename, mode="a", root_uep='group%04d' % k)
+        fileh = open_file(filename, mode="a", root_uep=f'group{k:04d}')
         # Get the group
         group = fileh.root
         for j in range(ntables):
             # Create a table
-            table = fileh.create_table(group, 'table%04d' % j, Test,
-                                       'Table%04d' % j,
+            table = fileh.create_table(group, f'table{j:04d}', Test,
+                                       f'Table{j:04d}',
                                        Filters(complevel, complib), nrows)
             rowsize = table.rowsize
             # Get the row object associated with the new table
@@ -110,21 +110,21 @@ def readFile(filename, ngroups, recsize, verbose):
 
     rowsread = 0
     for ngroup in range(ngroups):
-        fileh = open_file(filename, mode="r", root_uep='group%04d' % ngroup)
+        fileh = open_file(filename, mode="r", root_uep=f'group{ngroup:04d}')
         # Get the group
         group = fileh.root
         ntable = 0
         if verbose:
-            print("Group ==>", group)
+            print(f"Group ==> {group}")
         for table in fileh.list_nodes(group, 'Table'):
             rowsize = table.rowsize
             buffersize = table.rowsize * table.nrowsinbuf
             if verbose > 1:
-                print("Table ==>", table)
-                print("Max rows in buf:", table.nrowsinbuf)
-                print("Rows in", table._v_pathname, ":", table.nrows)
-                print("Buffersize:", table.rowsize * table.nrowsinbuf)
-                print("MaxTuples:", table.nrowsinbuf)
+                print(f"Table ==> {table}")
+                print(f"Max rows in buf: {table.nrowsinbuf}")
+                print(f"Rows in {table._v_pathname}: {table.nrows}")
+                print(f"Buffersize: {table.rowsize * table.nrowsinbuf}")
+                print(f"MaxTuples: {table.nrowsinbuf}")
 
             nrow = 0
             for row in table:
@@ -133,9 +133,8 @@ def readFile(filename, ngroups, recsize, verbose):
                     assert row["ntable"] == ntable
                     assert row["nrow"] == nrow
                 except:
-                    print("Error in group: %d, table: %d, row: %d" %
-                          (ngroup, ntable, nrow))
-                    print("Record ==>", row)
+                    print(f"Error in group: {ngroup}, table: {ntable}, row: {nrow}")
+                    print(f"Record ==> {row}")
                 nrow += 1
 
             assert nrow == table.nrows
@@ -168,7 +167,7 @@ if __name__ == "__main__":
     except:
         psyco_imported = 0
 
-    usage = """usage: %s [-d debug] [-v level] [-p] [-r] [-w] [-l complib] [-c complevel] [-g ngroups] [-t ntables] [-i nrows] file
+    usage = f"""usage: {sys.argv} [-d debug] [-v level] [-p] [-r] [-w] [-l complib] [-c complevel] [-g ngroups] [-t ntables] [-i nrows] file
     -d debugging level
     -v verbosity level
     -p use "psyco" if available
@@ -254,14 +253,14 @@ if __name__ == "__main__":
                                         complevel, complib, recsize)
         t2 = time.time()
         cpu2 = time.perf_counter()
-        tapprows = round(t2 - t1, 3)
-        cpuapprows = round(cpu2 - cpu1, 3)
-        tpercent = int(round(cpuapprows / tapprows, 2) * 100)
-        print("Rows written:", rowsw, " Row size:", rowsz)
-        print("Time writing rows: %s s (real) %s s (cpu)  %s%%" %
-              (tapprows, cpuapprows, tpercent))
-        print("Write rows/sec: ", int(rowsw / float(tapprows)))
-        print("Write KB/s :", int(rowsw * rowsz / (tapprows * 1024)))
+        tapprows = t2 - t1
+        cpuapprows = cpu2 - cpu1
+        print(f"Rows written: {rowsw}  Row size: {rowsz}")
+        print(
+            f"Time writing rows: {tapprows:.3f} s (real) "
+            f"{cpuapprows:.3f} s (cpu)  {cpuapprows / tapprows:.0%}")
+        print(f"Write rows/sec:  {rowsw / tapprows}")
+        print(f"Write KB/s : {rowsw * rowsz / (tapprows * 1024):.0f}")
 
     if testread:
         t1 = time.time()
@@ -275,14 +274,14 @@ if __name__ == "__main__":
             (rowsr, rowsz, bufsz) = readFile(file, ngroups, recsize, verbose)
         t2 = time.time()
         cpu2 = time.perf_counter()
-        treadrows = round(t2 - t1, 3)
-        cpureadrows = round(cpu2 - cpu1, 3)
-        tpercent = int(round(cpureadrows / treadrows, 2) * 100)
-        print("Rows read:", rowsr, " Row size:", rowsz, "Buf size:", bufsz)
-        print("Time reading rows: %s s (real) %s s (cpu)  %s%%" %
-              (treadrows, cpureadrows, tpercent))
-        print("Read rows/sec: ", int(rowsr / float(treadrows)))
-        print("Read KB/s :", int(rowsr * rowsz / (treadrows * 1024)))
+        treadrows = t2 - t1
+        cpureadrows = cpu2 - cpu1
+        print(f"Rows read: {rowsw}  Row size: {rowsz}, Buf size: {bufsz}")
+        print(
+            f"Time reading rows: {treadrows:.3f} s (real) "
+            f"{cpureadrows:.3f} s (cpu)  {cpureadrows / treadrows:.0%}")
+        print(f"Read rows/sec:  {rowsr / treadrows}")
+        print(f"Read KB/s : {rowsr * rowsz / (treadrows * 1024):.0f}")
 
     # Show the dirt
     if debug > 1:

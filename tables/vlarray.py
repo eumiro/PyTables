@@ -337,11 +337,11 @@ class VLArray(hdf5extension.VLArray, Leaf):
                 chunkshape = tuple(chunkshape)
             except TypeError:
                 raise TypeError(
-                    "`chunkshape` parameter must be an integer or sequence "
-                    "and you passed a %s" % type(chunkshape))
+                    f"`chunkshape` parameter must be an integer or sequence "
+                    f"and you passed a {type(chunkshape)}")
             if len(chunkshape) != 1:
-                raise ValueError("`chunkshape` rank (length) must be 1: %r"
-                                 % (chunkshape,))
+                raise ValueError(
+                    f"`chunkshape` rank (length) must be 1: {chunkshape!r}")
             self._v_chunkshape = tuple(SizeType(s) for s in chunkshape)
 
         super().__init__(parentnode, name, new, filters,
@@ -440,7 +440,7 @@ class VLArray(hdf5extension.VLArray, Leaf):
                 atom = ObjectAtom()
             else:
                 raise ValueError(
-                    "pseudo-atom name ``%s`` not known." % kind)
+                    f"pseudo-atom name ``{kind}`` not known.")
         elif self._v_file.format_version[:1] == "1":
             flavor1x = self.attrs.FLAVOR
             if flavor1x == "VLString":
@@ -483,9 +483,10 @@ class VLArray(hdf5extension.VLArray, Leaf):
             # Case where shape = (N,) and shape_atom = 1 or (1,)
             nobjects = shape[0]
         else:
-            raise ValueError("The object '%s' is composed of elements with "
-                             "shape '%s', which is not compatible with the "
-                             "atom shape ('%s')." % (nparr, shape, atom_shape))
+            raise ValueError(
+                f"The object {nparr!r} is composed of elements with "
+                f"shape {shape!r}, which is not compatible with the "
+                f"atom shape ({atom_shape!r}).")
         return nobjects
 
     def get_enum(self):
@@ -498,8 +499,8 @@ class VLArray(hdf5extension.VLArray, Leaf):
         """
 
         if self.atom.kind != 'enum':
-            raise TypeError("array ``%s`` is not of an enumerated type"
-                            % self._v_pathname)
+            raise TypeError(
+                f"array ``{self._v_pathname}`` is not of an enumerated type")
 
         return self.atom.enum
 
@@ -710,17 +711,16 @@ class VLArray(hdf5extension.VLArray, Leaf):
             nparr = self._read_array(nrow, nrow + 1, 1)[0]
             nobjects = len(nparr)
             if len(value) > nobjects:
-                raise ValueError("Length of value (%s) is larger than number "
-                                 "of elements in row (%s)" % (len(value),
-                                                              nobjects))
+                raise ValueError(
+                    f"Length of value ({len(value)}) is larger than number "
+                    f"of elements in row ({nobjects})")
             try:
                 nparr[:] = value
             except Exception as exc:  # XXX
-                raise ValueError("Value parameter:\n'%r'\n"
-                                 "cannot be converted into an array object "
-                                 "compliant vlarray[%s] row: \n'%r'\n"
-                                 "The error was: <%s>" % (value, nrow,
-                                                          nparr[:], exc))
+                raise ValueError(
+                    f"Value parameter:\n{value!r}\ncannot be converted into "
+                    f"an array object compliant vlarray[{nrow}] row: "
+                    f"\n{nparr[:]!r}\nThe error was: <{exc}>")
 
             if nparr.size > 0:
                 self._modify(nrow, nparr, nobjects)
@@ -870,9 +870,8 @@ class VLArray(hdf5extension.VLArray, Leaf):
     def __repr__(self):
         """This provides more metainfo in addition to standard __str__"""
 
-        return """{}
-  atom = {!r}
-  byteorder = {!r}
-  nrows = {}
-  flavor = {!r}""".format(self, self.atom, self.byteorder, self.nrows,
-                    self.flavor)
+        return f"""{self}
+  atom = {self.atom!r}
+  byteorder = {self.byteorder!r}
+  nrows = {self.nrows}
+  flavor = {self.flavor!r}"""

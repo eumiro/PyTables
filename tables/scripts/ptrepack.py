@@ -64,16 +64,18 @@ def recreate_indexes(table, dstfileh, dsttable):
     if listoldindexes != []:
         if not regoldindexes:
             if verbose:
-                print("[I]Not regenerating indexes for table: '%s:%s'" %
-                      (dstfileh.filename, dsttable._v_pathname))
+                print(
+                    f"[I]Not regenerating indexes for table: "
+                    f"'{dstfileh.filename}:{dsttable._v_pathname}'")
             return
         # Now, recreate the indexed columns
         if verbose:
-            print("[I]Regenerating indexes for table: '%s:%s'" %
-                  (dstfileh.filename, dsttable._v_pathname))
+            print(
+                f"[I]Regenerating indexes for table: "
+                f"'{dstfileh.filename}:{dsttable._v_pathname}'")
         for colname in listoldindexes:
             if verbose:
-                print("[I]Indexing column: '%s'. Please wait..." % colname)
+                print(f"[I]Indexing column: {colname!r}. Please wait...")
             colobj = dsttable.cols._f_col(colname)
             # We don't specify the filters for the indexes
             colobj.create_index(filters=None)
@@ -142,10 +144,11 @@ def copy_leaf(srcfile, dstfile, srcnode, dstnode, title,
             sortby=sortby, check_CSI=check_CSI, propindexes=propindexes)
     except:
         (type_, value, traceback) = sys.exc_info()
-        print("Problems doing the copy from '%s:%s' to '%s:%s'" %
-              (srcfile, srcnode, dstfile, dstnode))
+        print(
+            f"Problems doing the copy from "
+            f"'{srcfile}:{srcnode}' to '{dstfile}:{dstnode}'")
         print(f"The error was --> {type_}: {value}")
-        print("The destination file looks like:\n", dstfileh)
+        print(f"The destination file looks like:\n{dstfileh}")
         # Close all the open files:
         srcfileh.close()
         dstfileh.close()
@@ -231,8 +234,9 @@ def copy_children(srcfile, dstfile, srcgroup, dstgroup, title,
             use_hardlinks=use_hardlinks)
     except:
         (type_, value, traceback) = sys.exc_info()
-        print("Problems doing the copy from '%s:%s' to '%s:%s'" %
-              (srcfile, srcgroup, dstfile, dstgroup))
+        print(
+            f"Problems doing the copy from "
+            f"'{srcfile}:{srcgroup}' to '{dstfile}:{dstgroup}'")
         print(f"The error was --> {type_}: {value}")
         print("The destination file looks like:\n", dstfileh)
         # Close all the open files:
@@ -498,15 +502,14 @@ def main():
     # Copy the file
     if verbose:
         print("+=+" * 20)
-        print("Recursive copy:", args.recursive)
-        print("Applying filters:", filters)
+        print(f"Recursive copy: {args.recursive}")
+        print(f"Applying filters: {filters}")
         if args.sortby is not None:
-            print("Sorting table(s) by column:", args.sortby)
-            print("Forcing a CSI creation:", args.checkCSI)
+            print(f"Sorting table(s) by column: {args.sortby}")
+            print(f"Forcing a CSI creation: {args.checkCSI}")
         if args.propindexes:
             print("Recreating indexes in copied table(s)")
-        print("Start copying {}:{} to {}:{}".format(srcfile, srcnode,
-                                                dstfile, dstnode))
+        print(f"Start copying {srcfile}:{srcnode} to {dstfile}:{dstnode}")
         print("+=+" * 20)
 
     allow_padding = not args.dont_allow_padding
@@ -547,14 +550,9 @@ def main():
 
     # Gather some statistics
     t2 = time.time()
-    cpu2 = cputime ()
-    tcopy = round(t2 - t1, 3)
-    cpucopy = round(cpu2 - cpu1, 3)
-    try:
-        tpercent = int(round(cpucopy / tcopy, 2) * 100)
-    except ZeroDivisionError:
-        tpercent = 'NaN'
-
+    cpu2 = cputime()
+    tcopy = t2 - t1
+    cpucopy = cpu2 - cpu1
     if verbose:
         ngroups = stats['groups']
         nleaves = stats['leaves']
@@ -564,17 +562,15 @@ def main():
         nnodes = ngroups + nleaves + nlinks + nhardlinks
 
         print(
-            "Groups copied:", ngroups,
-            ", Leaves copied:", nleaves,
-            ", Links copied:", nlinks,
-            ", Hard links copied:", nhardlinks,
-        )
+            f"Groups copied: {ngroups}, Leaves copied: {nleaves}, "
+            f"Links copied: {nlinks}, Hard links copied: {nhardlinks}")
         if args.copyuserattrs:
             print("User attrs copied")
         else:
             print("User attrs not copied")
-        print("KBytes copied:", round(nbytescopied / 1024., 3))
-        print("Time copying: {} s (real) {} s (cpu)  {}%".format(
-            tcopy, cpucopy, tpercent))
-        print("Copied nodes/sec: ", round((nnodes) / float(tcopy), 1))
-        print("Copied KB/s :", int(nbytescopied / (tcopy * 1024)))
+        print(f"KBytes copied: {nbytescopied / 1024.:.3f}")
+        print(
+            f"Time copying: {tcopy:.3f} s (real) {cpucopy:.3f} s "
+            f"(cpu)  {cpucopy / tcopy:.0%}")
+        print(f"Copied nodes/sec: {nnodes / tcopy:.1f}")
+        print(f"Copied KB/s : {nbytescopied / tcopy / 1024:.0f}")

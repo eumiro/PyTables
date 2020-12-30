@@ -108,7 +108,7 @@ class ExprTestCase(common.TempFileMixin, TestCase):
         elif self.kind == "Column":
             ra = np.rec.fromarrays(
                 [a, b, c, r1],
-                dtype="%si4,%si8,%si4,%si8" % ((self.shape[1:],)*4))
+                dtype="{}i4,{}i8,{}i4,{}i8".format((self.shape[1:],)*4))
             t = self.h5file.create_table(root, "t", ra)
             self.a = t.cols.f0
             self.b = t.cols.f1
@@ -238,13 +238,13 @@ class MixedContainersTestCase(common.TempFileMixin, TestCase):
         rtype = {}
         colshape = self.shape[1:]
         for i, col in enumerate((a, b, c, d, e, rnda)):
-            rtype['f%d' % i] = tables.Col.from_sctype(col.dtype.type, colshape)
+            rtype[f'f{i}'] = tables.Col.from_sctype(col.dtype.type, colshape)
         t = self.h5file.create_table(root, "t", rtype)
         nrows = self.shape[0]
         row = t.row
         for nrow in range(nrows):
             for i, col in enumerate((a, b, c, d, e, rnda)):
-                row['f%d' % i] = col[nrow]
+                row[f'f{i}'] = col[nrow]
             row.append()
         t.flush()
         self.e = t.cols.f4

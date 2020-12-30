@@ -395,11 +395,11 @@ class RawPyTablesIO(io.RawIOBase):
 
     def _check_mode(self, mode):
         if not isinstance(mode, str):
-            raise TypeError("invalid mode: %r" % mode)
+            raise TypeError(f"invalid mode: {mode!r}")
 
         modes = set(mode)
         if modes - set("arwb+tU") or len(mode) > len(modes):
-            raise ValueError("invalid mode: %r" % mode)
+            raise ValueError(f"invalid mode: {mode!r}")
 
         reading = "r" in modes
         writing = "w" in modes
@@ -608,7 +608,7 @@ class RAFileNode(FileNodeMixin, RawPyTablesIO):
             for kwarg in kwargs:
                 if kwarg not in self.__allowed_init_kwargs:
                     raise TypeError(
-                        "%s keyword argument is not allowed" % repr(kwarg))
+                        f"{kwarg!r} keyword argument is not allowed")
 
             # Turn 'expectedsize' into 'expectedrows'.
             if 'expectedsize' in kwargs:
@@ -733,9 +733,9 @@ def save_to_filenode(h5file, filename, where, name=None, overwrite=False,
     """
     # sanity checks
     if not os.access(filename, os.R_OK):
-        raise OSError("The file '%s' could not be read" % filename)
+        raise OSError(f"The file {filename!r} could not be read")
     if isinstance(h5file, tables.file.File) and h5file.mode == "r":
-        raise OSError("The file '%s' is opened read-only" % h5file.filename)
+        raise OSError(f"The file {h5file.filename} is opened read-only")
 
     # guess filenode's name if necessary
     if name is None:
@@ -763,8 +763,8 @@ def save_to_filenode(h5file, filename, where, name=None, overwrite=False,
         if not overwrite:
             if new_h5file:
                 f.close()
-            raise OSError("Specified node already exists in file '%s'" %
-                          f.filename)
+            raise OSError(
+                f"Specified node already exists in file {f.filename}")
     except tables.NoSuchNodeError:
         pass
 
@@ -834,8 +834,8 @@ def read_from_filenode(h5file, filename, where, name=None, overwrite=False,
                 break
         if fnode is None:
             f.close()
-            raise tables.NoSuchNodeError("A filenode '%s' cannot be found at "
-                                         "'%s'" % (name, where))
+            raise tables.NoSuchNodeError(
+                f"A filenode {name!r} cannot be found at {where!r}")
 
     # guess output filename if necessary
     if os.path.isdir(filename) or filename.endswith(os.path.sep):
@@ -847,7 +847,7 @@ def read_from_filenode(h5file, filename, where, name=None, overwrite=False,
     if os.access(filename, os.R_OK) and not overwrite:
         if new_h5file:
             f.close()
-        raise OSError("The file '%s' already exists" % filename)
+        raise OSError(f"The file {filename} already exists")
 
     # create folder hierarchy if necessary
     if create_target and not os.path.isdir(os.path.split(filename)[0]):
@@ -856,7 +856,7 @@ def read_from_filenode(h5file, filename, where, name=None, overwrite=False,
     if not os.access(os.path.split(filename)[0], os.W_OK):
         if new_h5file:
             f.close()
-        raise OSError("The file '%s' cannot be written to" % filename)
+        raise OSError(f"The file {filename!r} cannot be written to")
 
     # read data from filenode
     data = fnode.read()

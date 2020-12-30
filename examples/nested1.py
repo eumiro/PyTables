@@ -32,7 +32,7 @@ def write(file, desc, indexed):
         row['y'] = 10.2 - i
         row['z'] = i
         row['color'] = colors[random.choice(['red', 'green', 'blue'])]
-        row['info/name'] = "name%s" % i
+        row['info/name'] = f"name{i}"
         row['info/info2/info3/z4'] = i
         # All the rest will be filled with defaults
         row.append()
@@ -79,4 +79,4 @@ class Test(tables.IsDescription):
 # Write the file and read it
 write(fileout, Test, ['info/info2/z3'])
 read(fileout)
-print("You can have a look at '%s' output file now." % fileout)
+print(f"You can have a look at {fileout!r} output file now.")

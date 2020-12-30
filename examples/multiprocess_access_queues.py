@@ -59,8 +59,7 @@ class FileAccess(multiprocessing.Process):
                 # look up the appropriate result_queue for this data processor
                 # instance
                 result_queue = self.result_queues[proc_num]
-                print('processor {} reading from row {}'.format(proc_num,
-                                                                  row_num))
+                print(f'processor {proc_num} reading from row {row_num}')
                 result_queue.put(self.read_data(row_num))
                 another_loop = True
             except queue.Empty:

@@ -102,23 +102,24 @@ def check_attribute_name(name):
 
     # Check whether `name` is a valid Python identifier.
     if not _python_id_re.match(name):
-        warnings.warn("object name is not a valid Python identifier: %r; "
-                      "it does not match the pattern ``%s``; %s"
-                      % (name, _python_id_re.pattern, _warnInfo),
-                      NaturalNameWarning, stacklevel=2)
+        warnings.warn(
+            f"object name is not a valid Python identifier: {name!r}; "
+            f"it does not match the pattern ``{_python_id_re}``; {_warnInfo}",
+            NaturalNameWarning, stacklevel=2)
         return
 
     # However, Python identifiers and keywords have the same form.
     if keyword.iskeyword(name):
-        warnings.warn("object name is a Python keyword: %r; %s"
-                      % (name, _warnInfo), NaturalNameWarning, stacklevel=2)
+        warnings.warn(
+            f"object name is a Python keyword: {name!r}; {_warnInfo}",
+            NaturalNameWarning, stacklevel=2)
         return
 
     # Still, names starting with reserved prefixes are not allowed.
     if _reserved_id_re.match(name):
-        raise ValueError("object name starts with a reserved prefix: %r; "
-                         "it matches the pattern ``%s``"
-                         % (name, _reserved_id_re.pattern))
+        raise ValueError(
+            f"object name starts with a reserved prefix: {name!r}; "
+            f"it matches the pattern ``{_reserved_id_re.pattern}``")
 
     # ``__members__`` is the only exception to that rule.
     if name == '__members__':
@@ -157,8 +158,8 @@ def check_name_validity(name):
     if name == '.':
         raise ValueError("``.`` is not allowed as an object name")
     elif '/' in name:
-        raise ValueError("the ``/`` character is not allowed "
-                         "in object names: %r" % name)
+        raise ValueError(
+            f"the ``/`` character is not allowed in object names: {name!r}")
 
 
 
@@ -185,7 +186,7 @@ def join_path(parentpath, name):
     if name.startswith('./'):  # Support relative paths (mainly for links)
         name = name[2:]
     if parentpath == '/' and name.startswith('/'):
-        pstr = '%s' % name
+        pstr = f"{name}"
     elif parentpath == '/' or name.startswith('/'):
         pstr = f'{parentpath}{name}'
     else:

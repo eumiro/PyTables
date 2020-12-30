@@ -118,9 +118,9 @@ CREATE INDEX ivar3 ON small(var3);
     conn = sqlite.connect(dbfile)
     cursor = conn.cursor()
     if indexmode == "standard":
-        place_holders = ",".join(['%s'] * 3)
+        placeholders = ",".join(['%s'] * 3)
         # Insert rows
-        SQL = "insert into small values(NULL, %s)" % place_holders
+        SQL = f"insert into small values(NULL, {placeholders})"
         time1 = time.time()
         cpu1 = time.perf_counter()
         # This way of filling is to copy the PyTables benchmark
@@ -142,19 +142,18 @@ CREATE INDEX ivar3 ON small(var3);
             var1 = np.array(None, shape=[j - i], dtype='s4')
             if not heavy:
                 for n in range(j - i):
-                    var1[n] = str("%.4s" % var2[n])
+                    var1[n] = f"{var2[n]:.4s}"
             for n in range(j - i):
                 fields = (var1[n], var2[n], var3[n])
                 cursor.execute(SQL, fields)
             conn.commit()
-        t1 = round(time.time() - time1, 5)
-        tcpu1 = round(time.perf_counter() - cpu1, 5)
+        t1 = time.time() - time1
+        tcpu1 = time.perf_counter() - cpu1
         rowsecf = nrows / t1
         size1 = os.stat(dbfile)[6]
-        print("******** Results for writing nrows = %s" % (nrows), "*********")
-        print(("Insert time:", t1, ", KRows/s:",
-              round((nrows / 10. ** 3) / t1, 3),))
-        print(", File size:", round(size1 / (1024. * 1024.), 3), "MB")
+        print(f"******** Results for writing nrows = {nrows} *********")
+        print(f"Insert time: {t1:.5f}, KRows/s: {nrows / 1000 / t1:.3f}")
+        print(f", File size: {size1 / (1024. * 1024.):.3f} MB")
 
     # Indexem
     if indexmode == "indexed":
@@ -167,14 +166,12 @@ CREATE INDEX ivar3 ON small(var3);
         conn.commit()
         cursor.execute("CREATE INDEX ivar3 ON small(var3)")
         conn.commit()
-        t2 = round(time.time() - time1, 5)
-        tcpu2 = round(time.perf_counter() - cpu1, 5)
+        t2 = time.time() - time1
+        tcpu2 = time.perf_counter() - cpu1
         rowseci = nrows / t2
-        print(("Index time:", t2, ", IKRows/s:",
-              round((nrows / 10. ** 3) / t2, 3),))
+        print(f"Index time: {t2:.5f}, IKRows/s: {nrows / 1000 / t2:.3f}")
         size2 = os.stat(dbfile)[6] - size1
-        print((", Final size with index:",
-              round(size2 / (1024. * 1024), 3), "MB"))
+        print(f", Final size with index: {size2 / (1024. * 1024):.3f} MB")
 
     conn.close()
 
@@ -182,9 +179,9 @@ CREATE INDEX ivar3 ON small(var3);
     bf = open_file(bfile, "a")
     recsize = "sqlite_small"
     if indexmode == "indexed":
-        table = bf.get_node("/" + recsize + "/create_indexed")
+        table = bf.get_node(f"/{recsize}/create_indexed")
     else:
-        table = bf.get_node("/" + recsize + "/create_standard")
+        table = bf.get_node(f"/{recsize}/create_standard")
     table.row["nrows"] = nrows
     table.row["irows"] = nrows
     table.row["tfill"] = t1
@@ -318,12 +315,13 @@ def readFile(dbfile, nrows, indexmode, heavy, dselect, bfile, riter):
             t2 = time2 / (riter - correction)
             tcpu2 = cpu2 / (riter - correction)
 
-        print("*** Query results for atom = %s, nrows = %s, "
-              "indexmode = %s ***" % (atom, nrows, indexmode))
-        print("Query time:", round(t1, 5), ", cached time:", round(t2, 5))
-        print("MRows/s:", round((nrows / 10. ** 6) / t1, 3), end=' ')
+        print(
+            f"*** Query results for atom = {atom}, "
+            f"nrows = {nrows}, indexmode = {indexmode} ***")
+        print(f"Query time: {t1:.5f}, cached time: {t2:.5f}")
+        print(f"MRows/s: {nrows / 1_000_000 / t1:.3f}", end=' ')
         if t2 > 0:
-            print(", cached MRows/s:", round((nrows / 10. ** 6) / t2, 3))
+            print(f", cached MRows/s: {(nrows / 10. ** 6) / t2:.3f}")
         else:
             print()
 
@@ -358,7 +356,7 @@ if __name__ == "__main__":
     except:
         psyco_imported = 0
 
-    usage = """usage: %s [-v] [-p] [-R] [-h] [-t] [-r] [-w] [-n nrows] [-b file] [-k riter] [-m indexmode] [-N range] datafile
+    usage = f"""usage: {sys.argv[0]} [-v] [-p] [-R] [-h] [-t] [-r] [-w] [-n nrows] [-b file] [-k riter] [-m indexmode] [-N range] datafile
             -v verbose
             -p use "psyco" if available
             -R use Random values for filling
@@ -370,7 +368,7 @@ if __name__ == "__main__":
             -b bench filename
             -N introduce (uniform) noise within range into the values
             -d the interval for look values (int, float) at. Default is 3.
-            -k number of iterations for reading\n""" % sys.argv[0]
+            -k number of iterations for reading\n"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'vpRhtrwn:b:k:m:N:d:')
@@ -421,8 +419,8 @@ if __name__ == "__main__":
             indexmode = option[1]
             if indexmode not in supported_imodes:
                 raise ValueError(
-                    "Indexmode should be any of '%s' and you passed '%s'" %
-                    (supported_imodes, indexmode))
+                    f"Indexmode should be any of {supported_imodes} "
+                    f"and you passed {indexmode}")
         elif option[0] == '-n':
             nrows = int(float(option[1]) * 1000)
         elif option[0] == '-d':

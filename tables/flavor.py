@@ -101,9 +101,8 @@ def check_flavor(flavor):
     if flavor not in all_flavors:
         available_flavs = ", ".join(flav for flav in all_flavors)
         raise FlavorError(
-            "flavor ``%s`` is unsupported or unavailable; "
-            "available flavors in this system are: %s"
-            % (flavor, available_flavs))
+            f"flavor ``{flavor}`` is unsupported or unavailable; "
+            f"available flavors in this system are: {available_flavs}")
 
 
 def array_of_flavor2(array, src_flavor, dst_flavor):
@@ -121,9 +120,9 @@ def array_of_flavor2(array, src_flavor, dst_flavor):
 
     convkey = (src_flavor, dst_flavor)
     if convkey not in converter_map:
-        raise FlavorError("conversion from flavor ``%s`` to flavor ``%s`` "
-                          "is unsupported or unavailable in this system"
-                          % (src_flavor, dst_flavor))
+        raise FlavorError(
+            f"conversion from flavor ``{src_flavor}`` to flavor "
+            f"``{dst_flavor}`` is unsupported or unavailable in this system")
 
     convfunc = converter_map[convkey]
     return convfunc(array)
@@ -146,8 +145,10 @@ def flavor_to_flavor(array, src_flavor, dst_flavor):
     try:
         return array_of_flavor2(array, src_flavor, dst_flavor)
     except FlavorError as fe:
-        warnings.warn("%s; returning an object of the ``%s`` flavor instead"
-                      % (fe.args[0], src_flavor), FlavorWarning)
+        warnings.warn(
+            f"{fe.args[0]}; returning an object "
+            f"of the ``{src_flavor}`` flavor instead",
+            FlavorWarning)
         return array
 
 
@@ -190,8 +191,8 @@ def flavor_of(array):
     type_name = type(array).__name__
     supported_descs = "; ".join(description_map[fl] for fl in all_flavors)
     raise TypeError(
-        "objects of type ``%s`` are not supported in this context, sorry; "
-        "supported objects are: %s" % (type_name, supported_descs))
+        f"objects of type ``{type_name}`` are not supported in this context, "
+        f"sorry; supported objects are: {supported_descs}")
 
 
 def array_of_flavor(array, dst_flavor):
@@ -239,7 +240,7 @@ def _register_aliases():
     """Register aliases of *available* flavors."""
 
     for flavor in all_flavors:
-        aliases = eval('_%s_aliases' % flavor)
+        aliases = eval(f'_{flavor}_aliases')
         for alias in aliases:
             alias_map[alias] = flavor
 
@@ -247,14 +248,14 @@ def _register_aliases():
 def _register_descriptions():
     """Register descriptions of *available* flavors."""
     for flavor in all_flavors:
-        description_map[flavor] = eval('_%s_desc' % flavor)
+        description_map[flavor] = eval(f'_{flavor}_desc')
 
 
 def _register_identifiers():
     """Register identifier functions of *available* flavors."""
 
     for flavor in all_flavors:
-        identifier_map[flavor] = eval('_is_%s' % flavor)
+        identifier_map[flavor] = eval(f'_is_{flavor}')
 
 
 def _register_converters():

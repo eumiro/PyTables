@@ -30,7 +30,7 @@ def create_file(array_size):
     array = np.ones(array_size, dtype='i8')
     with tables.open_file('test.h5', 'w') as fobj:
         array = fobj.create_array('/', 'test', array)
-        print('file created, size: {} MB'.format(array.size_on_disk / 1e6))
+        print(f'file created, size: {array.size_on_disk / 1e6} MB')
 
 
 # process to receive an array using a multiprocessing.Pipe connection
@@ -206,11 +206,10 @@ def read_and_send_socket(send_type, array_size, array_bytes, address_func,
 
 def print_results(send_type, start_timestamp, recv_timestamp,
                   finish_timestamp):
-    msg = 'type: {0}\t receive: {1:5.5f}, add:{2:5.5f}, total: {3:5.5f}'
-    print(msg.format(send_type,
-                     recv_timestamp - start_timestamp,
-                     finish_timestamp - recv_timestamp,
-                     finish_timestamp - start_timestamp))
+    print(f'type: {sent_type}\t '
+          f'receive: {recv_timestamp - start_timestamp:5.5f}, '
+          f'add:{finish_timestamp - recv_timestamp:5.5f}, '
+          f'total: {finish_timestamp - start_timestamp:5.5f}')
 
 
 if __name__ == '__main__':

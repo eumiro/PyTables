@@ -865,14 +865,14 @@ class ColsTestCase(common.TempFileMixin, TestCase):
                              )
         except AssertionError:
             self.assertEqual(repr(tbl.cols),
-                             """/test.cols (Cols), 6 columns
-  x (Column(0, 2), ('{}', (2,)))
+                             f"""/test.cols (Cols), 6 columns
+  x (Column(0, 2), ('{numpy.int32(0).dtype.str}', (2,)))
   Info (Cols(), Description)
   color (Column(0,), |S2)
   info (Cols(), Description)
-  y (Column(0, 2, 2), ('{}', (2, 2)))
+  y (Column(0, 2, 2), ('{numpy.float64(0).dtype.str}', (2, 2)))
   z (Column(0,), uint8)
-""".format(numpy.int32(0).dtype.str, numpy.float64(0).dtype.str))
+""")
 
     def test00b_repr(self):
         """Checking string representation of nested Cols."""
@@ -885,8 +885,8 @@ class ColsTestCase(common.TempFileMixin, TestCase):
             tbl = self.h5file.root.test
 
         if common.verbose:
-            print("str(tbl.cols.Info)-->", str(tbl.cols.Info))
-            print("repr(tbl.cols.Info)-->", repr(tbl.cols.Info))
+            print(f"str(tbl.cols.Info)--> {tbl.cols.Info!s}")
+            print(f"repr(tbl.cols.Info)--> {tbl.cols.Info!r}")
 
         self.assertEqual(str(
             tbl.cols.Info), "/test.cols.Info (Cols), 5 columns")

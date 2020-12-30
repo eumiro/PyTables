@@ -48,7 +48,7 @@ if __name__ == '__main__':
     import sys
     import getopt
 
-    usage = """usage: %s [-o file] [-t title] [--insert] [--table-size] [--query] [--query-cache] [--MB-units] files
+    usage = f"""usage: {sys.argv[0]} [-o file] [-t title] [--insert] [--table-size] [--query] [--query-cache] [--MB-units] files
  -o filename for output (only .png and .jpg extensions supported)
  -t title of the plot
  --insert -- Insert time for table
@@ -56,7 +56,7 @@ if __name__ == '__main__':
  --query -- Time for querying the integer column
  --query-cache -- Time for querying the integer (cached)
  --MB-units -- Express speed in MB/s instead of MRows/s
- \n""" % sys.argv[0]
+ \n"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'o:t:',

@@ -119,7 +119,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -192,7 +192,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -264,7 +264,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -285,7 +285,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -306,7 +306,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -380,7 +380,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -458,7 +458,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03c..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03c...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -536,7 +536,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03d..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03d...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -614,7 +614,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -690,7 +690,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -768,7 +768,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -867,7 +867,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -964,7 +964,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test06a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test06a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -991,7 +991,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test06b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test06b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1019,7 +1019,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test07a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test07a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1118,7 +1118,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test07b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test07b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1216,7 +1216,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test08a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test08a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1314,7 +1314,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test08b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test08b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1407,7 +1407,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test09a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test09a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1510,7 +1510,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test09b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test09b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1595,7 +1595,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test09c..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test09c...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1693,7 +1693,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test09d..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test09d...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1790,7 +1790,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test10a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test10a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -1925,7 +1925,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test10b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test10b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2032,7 +2032,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test10c..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test10c...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2129,7 +2129,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test10d..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test10d...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2226,7 +2226,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test11a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test11a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2260,7 +2260,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test12a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test12a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2374,7 +2374,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test13a..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test13a...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2437,7 +2437,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test13b..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test13b...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2500,7 +2500,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test13c..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test13c...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2562,7 +2562,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test13d..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test13d...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -2624,7 +2624,7 @@ class SelectValuesTestCase(common.TempFileMixin, TestCase):
 
         if verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test13e..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test13e...")
 
         table1 = self.h5file.root.table1
         table2 = self.h5file.root.table2
@@ -3283,11 +3283,11 @@ testlevels = ['Normal', 'Heavy']
 def iclassdata():
     for ckind in ckinds:
         for ctest in normal_tests + heavy_tests:
-            classname = '{}I{}{}'.format(ckind[0], testlevels[heavy][0], ctest)
+            classname = f'{ckind[0]}I{testlevels[heavy][0]}{ctest}'
             # Uncomment the next one and comment the past one if one
             # don't want to include the methods (testing purposes only)
             # cbasenames = ( '%sITableMixin' % ckind, "object")
-            cbasenames = ('%sITableMixin' % ckind, ctest)
+            cbasenames = (f'{ckind}ITableMixin', ctest)
             classdict = dict(heavy=bool(ctest in heavy_tests))
             yield (classname, cbasenames, classdict)
 
@@ -3296,7 +3296,7 @@ def iclassdata():
 for (cname, cbasenames, cdict) in iclassdata():
     cbases = tuple(eval(cbase) for cbase in cbasenames)
     class_ = type(cname, cbases, cdict)
-    exec('%s = class_' % cname)
+    exec(f'{cname} = class_')
 
 
 # Test case for issue #319

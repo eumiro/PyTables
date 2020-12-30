@@ -48,23 +48,23 @@ class DB:
         self.nrows = get_nrows(nrows)
 
     def get_db_size(self):
-        sout = subprocess.Popen("sync;du -s %s" % self.filename, shell=True,
+        sout = subprocess.Popen(f"sync;du -s {self.filename}", shell=True,
                                 stdout=subprocess.PIPE).stdout
         line = [l for l in sout][0]
         return int(line.split()[0])
 
     def print_mtime(self, t1, explain):
         mtime = time() - t1
-        print("%s:" % explain, round(mtime, 6))
-        print("Krows/s:", round((self.nrows / 1000.) / mtime, 6))
+        print(f"{explain}: {mtime:.6f}")
+        print(f"Krows/s: {self.nrows / 1000 / mtime:.6f}")
 
     def print_qtime(self, colname, ltimes):
         qtime1 = ltimes[0]  # First measured time
         qtime2 = ltimes[-1]  # Last measured time
-        print("Query time for %s:" % colname, round(qtime1, 6))
-        print("Mrows/s:", round((self.nrows / (MROW)) / qtime1, 6))
-        print("Query time for %s (cached):" % colname, round(qtime2, 6))
-        print("Mrows/s (cached):", round((self.nrows / (MROW)) / qtime2, 6))
+        print(f"Query time for {colname}: {qtime1:.6f}")
+        print(f"Mrows/s: {self.nrows / MROW / qtime1:.6g}")
+        print(f"Query time for {colname} (cached): {qtime2:.6f}")
+        print(f"Mrows/s (cached): {self.nrows / MROW / qtime2:.6f}")
 
     def norm_times(self, ltimes):
         "Get the mean and stddev of ltimes, avoiding the extreme values."
@@ -88,23 +88,22 @@ class DB:
         wtimes = ltimes[WARMCACHE:]
         wmean, wstd = self.norm_times(wtimes)
         if verbose:
-            print("Times for cold cache:\n", ctimes)
+            print(f"Times for cold cache:\n{ctimes}")
             # print "Times for warm cache:\n", wtimes
-            print("Histogram for warm cache: %s\n%s" %
-                  numpy.histogram(wtimes))
-        print(f"{r}1st query time for {colname}:",
-              round(qtime1, prec))
-        print(f"{r}Query time for {colname} (cold cache):",
-              round(cmean, prec), "+-", round(cstd, prec))
-        print(f"{r}Query time for {colname} (warm cache):",
-              round(wmean, prec), "+-", round(wstd, prec))
+            hist1, hist2 = numpy.histogram(wtimes)
+            print(f"Histogram for warm cache: {hist1}\n{hist2}")
+        print(f"{r}1st query time for {colname}: {qtime1:.{prec}f}")
+        print(f"{r}Query time for {colname} (cold cache): "
+              f"{cmean:.{prec}f} +- {cstd:.{prec}f}")
+        print(f"{r}Query time for {colname} (warm cache): "
+              f"{wmean:.{prec}f} +- {wstd:.{prec}f}")
 
     def print_db_sizes(self, init, filled, indexed):
         table_size = (filled - init) / 1024.
         indexes_size = (indexed - filled) / 1024.
-        print("Table size (MB):", round(table_size, 3))
-        print("Indexes size (MB):", round(indexes_size, 3))
-        print("Full size (MB):", round(table_size + indexes_size, 3))
+        print(f"Table size (MB): {table_size:.3f}")
+        print(f"Indexes size (MB): {indexes_size:.3f}")
+        print(f"Full size (MB): {table_size + indexes_size:.3f}")
 
     def fill_arrays(self, start, stop):
         arr_f8 = numpy.arange(start, stop, dtype='float64')
@@ -138,7 +137,7 @@ class DB:
         for colname in idx_cols:
             t1 = time()
             self.index_col(self.con, colname, kind, optlevel, verbose)
-            self.print_mtime(t1, 'Index time (%s)' % colname)
+            self.print_mtime(t1, f'Index time ({colname})')
 
     def query_db(self, niter, dtype, onlyidxquery, onlynonidxquery,
                  avoidfscache, verbose, inkernel):
@@ -234,7 +233,7 @@ if __name__ == "__main__":
     except:
         psyco_imported = 0
 
-    usage = """usage: %s [-T] [-P] [-v] [-f] [-k] [-p] [-m] [-c] [-q] [-i] [-I] [-S] [-x] [-z complevel] [-l complib] [-R range] [-N niter] [-n nrows] [-d datadir] [-O level] [-t kind] [-s] col -Q [suplim]
+    usage = f"""usage: {sys.argv[0]} [-T] [-P] [-v] [-f] [-k] [-p] [-m] [-c] [-q] [-i] [-I] [-S] [-x] [-z complevel] [-l complib] [-R range] [-N niter] [-n nrows] [-d datadir] [-O level] [-t kind] [-s] col -Q [suplim]
             -T use Pytables
             -P use Postgres
             -v verbose
@@ -258,7 +257,7 @@ if __name__ == "__main__":
             -t select the index type: "medium" (default) or "full", "light", "ultralight"
             -s select a type column for operations ('int' or 'float'. def all)
             -Q do a repeteated query up to 10**value
-            \n""" % sys.argv[0]
+            \n"""
 
     try:
         opts, pargs = getopt.getopt(
@@ -389,11 +388,11 @@ if __name__ == "__main__":
 
     if docreate:
         if verbose:
-            print("writing %s rows" % krows)
+            print(f"writing {krows} rows")
         db.create_db(dtype, kind, optlevel, verbose)
 
     if doquery:
-        print("Calling query_db() %s times" % niter)
+        print(f"Calling query_db() {niter} times")
         if doprofile:
             import pstats
             import cProfile as prof

@@ -77,7 +77,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object = numpy.ndarray(buffer=b"a"*self.objsize,
                                    shape=self.rowshape,
-                                   dtype="S%s" % earray.atom.itemsize)
+                                   dtype=f"S{earray.atom.itemsize}")
         else:
             object = numpy.arange(self.objsize, dtype=earray.atom.dtype.base)
             object.shape = self.rowshape
@@ -124,7 +124,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_iterEArray..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_iterEArray...")
 
         # Create an instance of an HDF5 Table
         if self.reopen:
@@ -142,7 +142,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.rowshape,
-                                    dtype="S%s" % earray.atom.itemsize)
+                                    dtype = f"S{earray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=earray.atom.dtype.base)
             object_.shape = self.rowshape
@@ -210,7 +210,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_sssEArray..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_sssEArray...")
 
         # Create an instance of an HDF5 Table
         if self.reopen:
@@ -284,7 +284,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_readEArray..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03_readEArray...")
 
         # This conversion made just in case indices are numpy scalars
         if self.start is not None:
@@ -310,7 +310,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.rowshape,
-                                    dtype="S%s" % earray.atom.itemsize)
+                                    dtype = f"S{earray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=earray.atom.dtype.base)
             object_.shape = self.rowshape
@@ -414,7 +414,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.rowshape,
-                                    dtype="S%s" % earray.atom.itemsize)
+                                    dtype = f"S{earray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=earray.atom.dtype.base)
             object_.shape = self.rowshape
@@ -506,8 +506,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04_getitemEArray..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04_getitemEArray...")
 
         if not hasattr(self, "slices"):
             # If there is not a slices attribute, create it
@@ -536,7 +535,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.rowshape,
-                                    dtype="S%s" % earray.atom.itemsize)
+                                    dtype = f"S{earray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=earray.atom.dtype.base)
             object_.shape = self.rowshape
@@ -612,8 +611,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05_setitemEArray..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05_setitemEArray...")
 
         if not hasattr(self, "slices"):
             # If there is not a slices attribute, create it
@@ -642,7 +640,7 @@ class BasicTestCase(common.TempFileMixin, TestCase):
         if self.type == "string":
             object_ = numpy.ndarray(buffer=b"a"*self.objsize,
                                     shape=self.rowshape,
-                                    dtype="S%s" % earray.atom.itemsize)
+                                    dtype = f"S{earray.atom.itemsize}")
         else:
             object_ = numpy.arange(self.objsize, dtype=earray.atom.dtype.base)
             object_.shape = self.rowshape
@@ -1289,7 +1287,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01a_StringAtom..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01a_String...")
 
         earray = self.h5file.create_earray(root, 'strings',
                                            atom=StringAtom(itemsize=3),
@@ -1321,7 +1319,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01b_StringAtom..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01b_StringAtom...")
 
         earray = self.h5file.create_earray(root, 'strings',
                                            atom=StringAtom(itemsize=3),
@@ -1353,7 +1351,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02a_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_int...")
 
         # Create an string atom
         earray = self.h5file.create_earray(root, 'EAtom',
@@ -1386,7 +1384,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02b_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02b_int...")
 
         earray = self.h5file.create_earray(root, 'EAtom',
                                            atom=Int32Atom(), shape=(0, 3),
@@ -1418,7 +1416,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03a_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03a_int...")
 
         earray = self.h5file.create_earray(root, 'EAtom',
                                            atom=Int32Atom(), shape=(0, 3),
@@ -1450,7 +1448,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03b_float..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03b_float...")
 
         earray = self.h5file.create_earray(root, 'EAtom',
                                            atom=Float64Atom(), shape=(0, 3),
@@ -1482,7 +1480,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04a_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04a_int...")
 
         byteorder = {'little': 'big', 'big': 'little'}[sys.byteorder]
         earray = self.h5file.create_earray(root, 'EAtom',
@@ -1516,7 +1514,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04b_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04b_int...")
 
         byteorder = {'little': 'big', 'big': 'little'}[sys.byteorder]
         earray = self.h5file.create_earray(root, 'EAtom',
@@ -1552,7 +1550,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04c_float..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04c_float...")
 
         byteorder = {'little': 'big', 'big': 'little'}[sys.byteorder]
         earray = self.h5file.create_earray(root, 'EAtom',
@@ -1586,7 +1584,7 @@ class OffsetStrideTestCase(common.TempFileMixin, TestCase):
         root = self.rootgroup
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04d_float..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04d_float...")
 
         byteorder = {'little': 'big', 'big': 'little'}[sys.byteorder]
         earray = self.h5file.create_earray(root, 'EAtom',
@@ -1624,7 +1622,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_copy...")
 
         # Create an EArray
         atom = Int16Atom()
@@ -1675,7 +1673,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_copy...")
 
         # Create an EArray
         atom = Int16Atom()
@@ -1727,7 +1725,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03b_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03b_copy...")
 
         atom = Int16Atom()
         array1 = self.h5file.create_earray(self.h5file.root, 'array1',
@@ -1774,7 +1772,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03d_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03b_copy...")
 
         atom = StringAtom(itemsize=3)
         array1 = self.h5file.create_earray(self.h5file.root, 'array1',
@@ -1822,7 +1820,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03e_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03c_copy...")
 
         atom = StringAtom(itemsize=4)
         array1 = self.h5file.create_earray(self.h5file.root, 'array1',
@@ -1869,7 +1867,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04_copy...")
 
         # Create an EArray
         atom = Int16Atom()
@@ -1907,7 +1905,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05_copy...")
 
         # Create an EArray
         atom = Int16Atom()
@@ -1948,7 +1946,7 @@ class CopyTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test05b_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test05b_copy...")
 
         # Create an Array
         atom = Int16Atom()
@@ -2001,7 +1999,7 @@ class CopyIndexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_index..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_index...")
 
         # Create an EArray
         atom = Int32Atom()
@@ -2041,7 +2039,7 @@ class CopyIndexTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_indexclosef..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_indexclosef...")
 
         # Create an EArray
         atom = Int32Atom()

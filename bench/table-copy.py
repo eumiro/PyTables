@@ -10,13 +10,13 @@ N = 144000
 def timed(func, *args, **kwargs):
     start = time.time()
     res = func(*args, **kwargs)
-    print("%fs elapsed." % (time.time() - start))
+    print(f"{time.time() - start:.5f}s elapsed.")
     return res
 
 
 def create_table(output_path):
     print("creating array...", end=' ')
-    dt = np.dtype([('field%d' % i, int) for i in range(320)])
+    dt = np.dtype([(f'field{i}', int) for i in range(320)])
     a = np.zeros(N, dtype=dt)
     print("done.")
 

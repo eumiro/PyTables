@@ -295,8 +295,8 @@ class AttributeSet(hdf5extension.AttributeSet):
 
         # If attribute does not exist, raise AttributeError
         if not name in self._v_attrnames:
-            raise AttributeError("Attribute '%s' does not exist in node: "
-                                 "'%s'" % (name, self._v__nodepath))
+            raise AttributeError(
+                f"Attribute {name!r} does not exist in node: {self._v__nodepath}")
 
         # Read the attribute from disk. This is an optimization to read
         # quickly system attributes that are _string_ values, but it
@@ -471,11 +471,12 @@ class AttributeSet(hdf5extension.AttributeSet):
         # Check if there are too many attributes.
         max_node_attrs = nodefile.params['MAX_NODE_ATTRS']
         if len(attrnames) >= max_node_attrs:
-            warnings.warn("""\
-node ``%s`` is exceeding the recommended maximum number of attributes (%d);\
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
-                          % (self._v__nodepath, max_node_attrs),
-                          PerformanceWarning)
+            warnings.warn(
+                f"node ``{self._v__nodepath}`` is exceeding the recommended "
+                f"maximum number of attributes ({max_node_attrs}); "
+                f"be ready to see PyTables asking for *lots* of memory "
+                f"and possibly slow I/O",
+                PerformanceWarning)
 
         undo_enabled = nodefile.is_undo_enabled()
         # Log old attribute removal (if any).
@@ -538,8 +539,8 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
         # Check if attribute exists
         if name not in self._v_attrnames:
             raise AttributeError(
-                "Attribute ('%s') does not exist in node '%s'"
-                % (name, self._v__nodepath))
+                f"Attribute ({name!r}) does not exist "
+                f"in node {self._v__nodepath!r}")
 
         nodefile._check_writable()
 
@@ -557,8 +558,8 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
         except AttributeError:
             # Capture the AttributeError an re-raise a KeyError one
             raise KeyError(
-                "Attribute ('%s') does not exist in node '%s'"
-                % (name, self._v__nodepath))
+                f"Attribute ({name!r}) does not exist "
+                f"in node {self._v__nodepath!r}")
 
     def __setitem__(self, name, value):
         """The dictionary like interface for __setattr__()."""
@@ -573,8 +574,8 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
         except AttributeError:
             # Capture the AttributeError an re-raise a KeyError one
             raise KeyError(
-                "Attribute ('%s') does not exist in node '%s'"
-                % (name, self._v__nodepath))
+                f"Attribute ({name!r}) does not exist "
+                f"in node {self._v__nodepath!r}")
 
     def __contains__(self, name):
         """Is there an attribute with that name?
@@ -676,20 +677,18 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
         classname = self.__class__.__name__
         # The attribute names
         attrnumber = len([n for n in self._v_attrnames])
-        return "%s._v_attrs (%s), %s attributes" % \
-               (pathname, classname, attrnumber)
+        return f"{pathname}._v_attrs ({classname}, {attrnumber} attributes"
 
     def __repr__(self):
         """A detailed string representation for this object."""
 
         # print additional info only if there are attributes to show
         attrnames = [n for n in self._v_attrnames]
-        if len(attrnames):
-            rep = ['{} := {!r}'.format(attr, getattr(self, attr))
-                   for attr in attrnames]
-            attrlist = '[%s]' % (',\n    '.join(rep))
+        if attrnames:
+            rep = [f'{attr} := {getattr(self, attr)!r}' for attr in attrnames]
+            attrlist = ',\n    '.join(rep)
 
-            return "{}:\n   {}".format(str(self), attrlist)
+            return f"{self!s}:\n   [{attrlist}]"
         else:
             return str(self)
 

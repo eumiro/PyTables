@@ -53,13 +53,13 @@ class TrackTimesMixin:
         # Create CArrays as well
         self.h5file.create_carray(group, name=f'carray{j}',
                                   obj=var3List,
-                                  title="col {}".format(j + 2),
+                                  title=f"col {j + 2}",
                                   track_times=track_times)
 
         # Create EArrays as well
         ea = self.h5file.create_earray(group, f'earray{j}',
                                        StringAtom(itemsize=4), (0,),
-                                       "col {}".format(j + 4),
+                                       f"col {j + 4}",
                                        track_times=track_times)
         # And fill them with some values
         ea.append(var1List)
@@ -67,7 +67,7 @@ class TrackTimesMixin:
         # Finally VLArrays too
         vla = self.h5file.create_vlarray(group, f'vlarray{j}',
                                          Int16Atom(),
-                                         "col {}".format(j + 6),
+                                         f"col {j + 6}",
                                          track_times=track_times)
         # And fill them with some values
         vla.append(var3List)

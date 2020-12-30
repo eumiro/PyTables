@@ -14,10 +14,9 @@ class PyTables_DB(DB):
         self.complib = complib
         # Complete the filename
         self.filename = "pro-" + self.filename
-        self.filename += '-' + 'O%s' % optlevel
-        self.filename += '-' + kind
+        self.filename += f'-O{optlevel}-{kind}'
         if docompress:
-            self.filename += '-' + complib + str(docompress)
+            self.filename += f'-{complib}{docompress!s}'
         self.datadir = datadir
         if not os.path.isdir(self.datadir):
             if not os.path.isabs(self.datadir):
@@ -27,7 +26,7 @@ class PyTables_DB(DB):
             os.makedirs(dir_path)
             self.datadir = dir_path
             print(f"Created {self.datadir}.")
-        self.filename = self.datadir + '/' + self.filename + '.h5'
+        self.filename = f'{self.datadir}/{self.filename}.h5'
         # The chosen filters
         self.filters = tables.Filters(complevel=self.docompress,
                                       complib=self.complib,

@@ -185,16 +185,17 @@ class CArray(Array):
 
         if new:
             if not isinstance(atom, Atom):
-                raise ValueError("atom parameter should be an instance of "
-                                 "tables.Atom and you passed a %s." %
-                                 type(atom))
+                raise ValueError(
+                    f"atom parameter should be an instance of "
+                    f"tables.Atom and you passed a {type(atom)}.")
             if shape is None:
                 raise ValueError("you must specify a non-empty shape")
             try:
                 shape = tuple(shape)
             except TypeError:
-                raise TypeError("`shape` parameter must be a sequence "
-                                "and you passed a %s" % type(shape))
+                raise TypeError(
+                    f"`shape` parameter must be a sequence "
+                    f"and you passed a {type(shape)}")
             self.shape = tuple(SizeType(s) for s in shape)
 
             if chunkshape is not None:
@@ -202,15 +203,15 @@ class CArray(Array):
                     chunkshape = tuple(chunkshape)
                 except TypeError:
                     raise TypeError(
-                        "`chunkshape` parameter must be a sequence "
-                        "and you passed a %s" % type(chunkshape))
+                        f"`chunkshape` parameter must be a sequence "
+                        f"and you passed a {type(chunkshape)}")
                 if len(shape) != len(chunkshape):
-                    raise ValueError("the shape (%s) and chunkshape (%s) "
-                                     "ranks must be equal." %
-                                    (shape, chunkshape))
+                    raise ValueError(
+                        f"the shape ({shape}) and chunkshape ({chunkshape}) "
+                        f"ranks must be equal.")
                 elif min(chunkshape) < 1:
-                    raise ValueError("chunkshape parameter cannot have "
-                                     "zero-dimensions.")
+                    raise ValueError(
+                        "chunkshape parameter cannot have zero-dimensions.")
                 self._v_chunkshape = tuple(SizeType(s) for s in chunkshape)
 
         # The `Array` class is not abstract enough! :(
@@ -221,8 +222,7 @@ class CArray(Array):
         """Create a new array in file (specific part)."""
 
         if min(self.shape) < 1:
-            raise ValueError(
-                "shape parameter cannot have zero-dimensions.")
+            raise ValueError("shape parameter cannot have zero-dimensions.")
         # Finish the common part of creation process
         return self._g_create_common(self.nrows)
 

@@ -142,7 +142,7 @@ class CreateTestCase(common.TempFileMixin, TestCase):
 
         varnames = []
         for i in range(varnumber):
-            varnames.append('int%d' % i)
+            varnames.append(f'int{i}')
 
         # Build a dictionary with the types as values and varnames as keys
         recordDict = {}
@@ -188,7 +188,7 @@ class CreateTestCase(common.TempFileMixin, TestCase):
 
         varnames = []
         for i in range(varnumber):
-            varnames.append('int%d' % i)
+            varnames.append(f'int{i}')
 
         # Build a dictionary with the types as values and varnames as keys
         recordDict = {}
@@ -279,7 +279,7 @@ class FiltersTreeTestCase(common.TempFileMixin, TestCase):
             d = table.row
             # Fill the table
             for i in range(self.nrows):
-                d['var1'] = '%04d' % (self.nrows - i)
+                d['var1'] = f'{self.nrows - i:04d}'
                 d['var2'] = i
                 d['var3'] = i * 2
                 d.append()      # This injects the Record values
@@ -329,8 +329,7 @@ class FiltersTreeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_checkFilters..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00__checkFilters...")
 
         # First level check
         if common.verbose:
@@ -436,8 +435,7 @@ class FiltersTreeTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_checkFilters..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01__checkFilters...")
 
         # Close the file
         self._reopen()
@@ -721,7 +719,7 @@ class CopyGroupTestCase(common.TempFileMixin, TestCase):
                 d = table.row
                 # Fill the table
                 for row_i in range(self.nrows):
-                    d['var1'] = '%04d' % (self.nrows - row_i)
+                    d['var1'] = f'{self.nrows - row_i:04d}'
                     d['var2'] = row_i
                     d['var3'] = row_i * 2
                     d.append()      # This injects the Record values
@@ -774,8 +772,7 @@ class CopyGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_nonRecursive..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00_nonRecursive...")
 
         # Copy a group non-recursively
         srcgroup = self.h5file.root.group0.group1
@@ -843,10 +840,8 @@ class CopyGroupTestCase(common.TempFileMixin, TestCase):
 
             # These lists should already be ordered
             if common.verbose:
-                print("srcattrskeys for node {}: {}".format(srcnode._v_name,
-                                                        srcattrskeys))
-                print("dstattrskeys for node {}: {}".format(dstnode._v_name,
-                                                        dstattrskeys))
+                print(f"srcattrskeys for node {srcnode._v_name}: {srcattrskeys}")
+                print(f"dstattrskeys for node {dstnode._v_name}: {dstattrskeys}")
             self.assertEqual(srcattrskeys, dstattrskeys)
             if common.verbose:
                 print("The attrs names has been copied correctly")
@@ -867,7 +862,7 @@ class CopyGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_Recursive..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_Recursive...")
 
         # Create the destination node
         group = self.h5file2.root
@@ -923,8 +918,9 @@ class CopyGroupTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_RecursiveFilters..." %
-                   self.__class__.__name__)
+            print(
+                f"Running {self.__class__.__name__}."
+                f"test03_RecursiveFilters...")
 
         # Create the destination node
         group = self.h5file2.root
@@ -1064,7 +1060,7 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
                 d = table.row
                 # Fill the table
                 for row_i in range(self.nrows):
-                    d['var1'] = '%04d' % (self.nrows - row_i)
+                    d['var1'] = f"{self.nrows - row_i:04d}"
                     d['var2'] = row_i
                     d['var3'] = row_i * 2
                     d.append()      # This injects the Record values
@@ -1120,7 +1116,7 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00_overwrite..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00_overwrite...")
 
         # Create a temporary file
         file2h = open(self.h5fname2, "w")
@@ -1159,8 +1155,7 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00a_srcdstequal..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00a_srcdstequal...")
 
         # Copy the file to the destination
         self.assertRaises(IOError, self.h5file.copy_file, self.h5file.filename)
@@ -1170,7 +1165,7 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test00b_firstclass..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test00b_firstclass...")
 
         # Close the temporary file
         self.h5file.close()
@@ -1204,7 +1199,7 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_copy..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_copy...")
 
         # Copy the file to the destination
         self.h5file.copy_file(self.h5fname2, title=self.title,
@@ -1250,10 +1245,8 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
 
             # These lists should already be ordered
             if common.verbose:
-                print("srcattrskeys for node {}: {}".format(srcnode._v_name,
-                                                        srcattrskeys))
-                print("dstattrskeys for node {}: {}".format(dstnode._v_name,
-                                                        dstattrskeys))
+                print(f"srcattrskeys for node {srcnode._v_name}: {srcattrskeys}")
+                print(f"dstattrskeys for node {dstnode._v_name}: {dstattrskeys}")
             self.assertEqual(srcattrskeys, dstattrskeys)
             if common.verbose:
                 print("The attrs names has been copied correctly")
@@ -1274,7 +1267,7 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_Attrs..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_Attrs...")
 
         # Copy the file to the destination
         self.h5file.copy_file(self.h5fname2, title=self.title,
@@ -1299,10 +1292,8 @@ class CopyFileTestCase(common.TempFileMixin, TestCase):
             dstattrskeys = dstattrs._f_list("all")
             # These lists should already be ordered
             if common.verbose:
-                print("srcattrskeys for node {}: {}".format(srcnode._v_name,
-                                                        srcattrskeys))
-                print("dstattrskeys for node {}: {}".format(dstnode._v_name,
-                                                        dstattrskeys))
+                print(f"srcattrskeys for node {srcnode._v_name}: {srcattrskeys}")
+                print(f"dstattrskeys for node {dstnode._v_name}: {dstattrskeys}")
 
             # Filters may differ, do not take into account
             if self.filters is not None:
@@ -1378,8 +1369,7 @@ class CopyFileCase10(common.TempFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_notoverwrite..." %
-                  self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_notoverwrite...")
 
         # Create two empty files:
         self.h5fname2 = tempfile.mktemp(".h5")
@@ -1440,11 +1430,11 @@ class GroupFiltersTestCase(common.TempFileMixin, TestCase):
             if node._v_name.endswith('_no'):
                 self.assertEqual(
                     node_filters, tables.Filters(),
-                    "node ``%s`` should have no filters" % node._v_pathname)
+                    f"node ``{node._v_pathname}`` should have no filters")
             elif node._v_name.endswith('_yes'):
                 self.assertEqual(
                     node_filters, self.filters,
-                    "node ``%s`` should have filters" % node._v_pathname)
+                    f"node ``{node._v_pathname}`` should have filters")
 
     def test00_propagate(self):
         """Filters propagating to children."""

@@ -270,8 +270,8 @@ class Leaf(Node):
 
             if byteorder not in (None, 'little', 'big'):
                 raise ValueError(
-                    "the byteorder can only take 'little' or 'big' values "
-                    "and you passed: %s" % byteorder)
+                    f"the byteorder can only take 'little' or 'big' values "
+                    f"and you passed: {byteorder}")
             self.byteorder = byteorder
             """The byte ordering of the leaf data *on disk*."""
 
@@ -303,18 +303,16 @@ class Leaf(Node):
         # The title
         title = self._v_title
         # The filters
-        filters = ""
+        filters = []
         if self.filters.fletcher32:
-            filters += ", fletcher32"
+            filters.append("fletcher32")
         if self.filters.complevel:
             if self.filters.shuffle:
-                filters += ", shuffle"
+                filters.append("shuffle")
             if self.filters.bitshuffle:
-                filters += ", bitshuffle"
-            filters += ", {}({})".format(self.filters.complib,
-                                     self.filters.complevel)
-        return "%s (%s%s%s) %r" % \
-               (self._v_pathname, classname, self.shape, filters, title)
+                filters.append("bitshuffle")
+            filters.append(f"{self.filters.complib}({self.filters.complevel})")
+        return f"{self._v_pathname} ({classname}{self.shape}{', '.join(filters)}) {title!r}"
 
     # Private methods
     # ~~~~~~~~~~~~~~~
@@ -397,15 +395,17 @@ class Leaf(Node):
             # If rowsize is too large, issue a Performance warning
             maxrowsize = params['BUFFER_TIMES'] * buffersize
             if rowsize > maxrowsize:
-                warnings.warn("""\
-The Leaf ``%s`` is exceeding the maximum recommended rowsize (%d bytes);
-be ready to see PyTables asking for *lots* of memory and possibly slow
-I/O.  You may want to reduce the rowsize by trimming the value of
-dimensions that are orthogonal (and preferably close) to the *main*
-dimension of this leave.  Alternatively, in case you have specified a
-very small/large chunksize, you may want to increase/decrease it."""
-                              % (self._v_pathname, maxrowsize),
-                              PerformanceWarning)
+                warnings.warn(
+                    f"The Leaf ``{self._v_pathname}`` is exceeding the "
+                    f"maximum recommended rowsize ({maxrowsize} bytes); "
+                    f"be ready to see PyTables asking for *lots* of memory "
+                    f"and possibly slow I/O.  You may want to reduce the "
+                    f"rowsize by trimming the value of dimensions that are "
+                    f"orthogonal (and preferably close) to the *main* "
+                    f"dimension of this leave.  Alternatively, in case "
+                    f"you have specified a very small/large chunksize, "
+                    f"you may want to increase/decrease it.""",
+                    PerformanceWarning)
         return nrowsinbuf
 
     # This method is appropriate for calls to __getitem__ methods
@@ -431,8 +431,9 @@ very small/large chunksize, you may want to increase/decrease it."""
             # Protection against start greater than available records
             # nrows == 0 is a special case for empty objects
             if 0 < nrows <= start:
-                raise IndexError("start of range (%s) is greater than "
-                                 "number of rows (%s)" % (start, nrows))
+                raise IndexError(
+                    f"start of range ({start}) is greater than "
+                    f"number of rows ({nrows})")
             step = 1
             if start == -1:  # corner case
                 stop = nrows

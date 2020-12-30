@@ -11,7 +11,7 @@ random.seed(2)
 def show_stats(explain, tref):
     "Show the used memory (only works for Linux 2.6.x)."
     # Build the command to obtain memory info
-    cmd = "cat /proc/%s/status" % os.getpid()
+    cmd = f"cat /proc/{os.getpid()}/status"
     sout = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout
     for line in sout:
         if line.startswith("VmSize:"):
@@ -27,12 +27,12 @@ def show_stats(explain, tref):
         elif line.startswith("VmLib:"):
             vmlib = int(line.split()[1])
     sout.close()
-    print("Memory usage: ******* %s *******" % explain)
+    print(f"Memory usage: ******* {explain} *******")
     print(f"VmSize: {vmsize:>7} kB\tVmRSS: {vmrss:>7} kB")
     print(f"VmData: {vmdata:>7} kB\tVmStk: {vmstk:>7} kB")
     print(f"VmExe:  {vmexe:>7} kB\tVmLib: {vmlib:>7} kB")
     tnow = time()
-    print("WallClock time:", round(tnow - tref, 3))
+    print(f"WallClock time: {tnow - tref:.3f}")
     return tnow
 
 

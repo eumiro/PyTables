@@ -59,8 +59,8 @@ def create_db(filename, nrows):
     con.commit()
     ctime = time() - t1
     if verbose:
-        print("insert time:", round(ctime, 5))
-        print("Krows/s:", round((nrows / 1000.) / ctime, 5))
+        print(f"insert time: {ctime:.5f}")
+        print(f"Krows/s: {nrows / 1000 / ctime:.5f}")
     close_db(con, cur)
 
 
@@ -71,8 +71,8 @@ def index_db(filename):
     con.commit()
     itime = time() - t1
     if verbose:
-        print("index time:", round(itime, 5))
-        print("Krows/s:", round(nrows / itime, 5))
+        print(f"index time: {itime:.5f}")
+        print(f"Krows/s: {nrows / itime:.5f}")
     # Close the DB
     close_db(con, cur)
 
@@ -84,16 +84,14 @@ def query_db(filename, rng):
     for i in range(ntimes):
         # between clause does not seem to take advantage of indexes
         # cur.execute("select j from ints where j between %s and %s" % \
-        cur.execute("select i from ints where j >= %s and j <= %s" %
-                    # cur.execute("select i from ints where i >= %s and i <=
-                    # %s" %
-                    (rng[0] + i, rng[1] + i))
+        cur.execute(
+            f"select i from ints where j >= {rng[0] + i} and j <= {rng[0] + i}")
         results = cur.fetchall()
     con.commit()
     qtime = (time() - t1) / ntimes
     if verbose:
-        print("query time:", round(qtime, 5))
-        print("Mrows/s:", round((nrows / 1000.) / qtime, 5))
+        print(f"query time: {qtime:.5f}")
+        print(f"Mrows/s: {nrows / 1000 / qtime:.5f}")
         print(results)
     close_db(con, cur)
 
@@ -111,7 +109,7 @@ if __name__ == "__main__":
     except:
         psyco_imported = 0
 
-    usage = """usage: %s [-v] [-p] [-m] [-i] [-q] [-c] [-R range] [-n nrows] file
+    usage = f"""usage: {sys.argv[0]} [-v] [-p] [-m] [-i] [-q] [-c] [-R range] [-n nrows] file
             -v verbose
             -p use "psyco" if available
             -m use random values to fill the table
@@ -121,7 +119,7 @@ if __name__ == "__main__":
             -2 use sqlite2 (default is use sqlite3)
             -R select a range in a field in the form "start,stop" (def "0,10")
             -n sets the number of rows (in krows) in each table
-            \n""" % sys.argv[0]
+            \n"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'vpmiqc2R:n:')
@@ -176,7 +174,7 @@ if __name__ == "__main__":
 
     if docreate:
         if verbose:
-            print("writing %s krows" % nrows)
+            print(f"writing {nrows} krows")
         if psyco_imported and usepsyco:
             psyco.bind(create_db)
         nrows *= 1000

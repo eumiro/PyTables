@@ -42,10 +42,10 @@ class GarbageTestCase(TestCase):
                     classCount[objClass] += 1
                 else:
                     classCount[objClass] = 1
-            incidence = ['``%s``: %d' % (cls, cnt)
+            incidence = [f'``{cls}``: {cnt}'
                          for (cls, cnt) in classCount.items()]
             print("Class incidence:", ', '.join(incidence))
-        self.fail("Possible leak: %d uncollected objects." % garbageLen)
+        self.fail(f"Possible leak: {garbageLen} uncollected objects.")
 
 
 def suite():

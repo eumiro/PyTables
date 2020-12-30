@@ -51,8 +51,8 @@ def _unsupported_operation_error(exception):
 
     message = exception.args[0]
     op, types = _no_matching_opcode.search(message).groups()
-    newmessage = "unsupported operand types for *%s*: " % op
-    newmessage += ', '.join([typecode_to_kind[t] for t in types[1:]])
+    newmessage = f"unsupported operand types for *{op}*: "
+    newmessage += ', '.join(typecode_to_kind[t] for t in types[1:])
     return exception.__class__(newmessage)
 
 
@@ -262,8 +262,7 @@ def _get_idx_expr_recurse(exprnode, indexedcols, idxexprs, strexpr):
             if lenexprs == 1:
                 strexpr[:] = ["e0"]
             else:
-                strexpr[:] = [
-                    "(%s %s e%d)" % (strexpr[0], op_conv[op], lenexprs - 1)]
+                strexpr[:] = [f"({strexpr[0]} {op_conv[op]} e{lenexprs - 1})"]
 
     # Add expressions to the indexable list when they are and'ed, or
     # they are both indexable.
@@ -342,9 +341,9 @@ class CompiledCondition:
         """NumExpr kwargs (used to pass ex_uses_vml to numexpr)"""
 
     def __repr__(self):
-        return ("idxexprs: %s\nstrexpr: %s\nidxvars: %s"
-                % (self.index_expressions, self.string_expression,
-                   self.index_variables))
+        return (f"idxexprs: {self.index_expressions}\n"
+                f"strexpr: {self.string_expression}\n"
+                f"idxvars: {self.index_variables}")
 
     def with_replaced_vars(self, condvars):
         """Replace index limit variables with their values in-place.
@@ -406,8 +405,7 @@ def compile_condition(condition, typemap, indexedcols):
     # Get the expression tree and extract index conditions.
     expr = stringToExpression(condition, typemap, {})
     if expr.astKind != 'bool':
-        raise TypeError("condition ``%s`` does not have a boolean type"
-                        % condition)
+        raise TypeError(f"condition ``{condition}`` does not have a boolean type")
     idxexprs = _get_idx_expr(expr, indexedcols)
     # Post-process the answer
     if isinstance(idxexprs, list):

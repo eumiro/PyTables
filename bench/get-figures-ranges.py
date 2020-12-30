@@ -96,7 +96,7 @@ if __name__ == '__main__':
     import sys
     import getopt
 
-    usage = """usage: %s [-o file] [-t title] [--insert] [--create-index] [--create-total] [--table-size] [--indexes-size] [--total-size] [--query=colname]  [--query-cold=colname] [--query-warm=colname] files
+    usage = f"""usage: {sys.argv[0]} [-o file] [-t title] [--insert] [--create-index] [--create-total] [--table-size] [--indexes-size] [--total-size] [--query=colname]  [--query-cold=colname] [--query-warm=colname] files
  -o filename for output (only .png and .jpg extensions supported)
  -t title of the plot
  --insert -- Insert time for table
@@ -108,7 +108,7 @@ if __name__ == '__main__':
  --query=colname -- Time for querying the specified column
  --query-cold=colname -- Time for querying the specified column (cold cache)
  --query-warm=colname -- Time for querying the specified column (warm cache)
- \n""" % sys.argv[0]
+ \n"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'o:t:',

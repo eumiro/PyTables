@@ -57,7 +57,7 @@ for tablename in ("TParticle1", "TParticle2", "TParticle3"):
     # Fill the table with 257 particles
     for i in range(257):
         # First, assign the values to the Particle record
-        particle['name'] = 'Particle: %6d' % (i)
+        particle['name'] = f'Particle: {i:6d}'
         particle['lati'] = i
         particle['longi'] = 10 - i
         # Detectable errors start here. Play with them!
@@ -81,7 +81,7 @@ for tablename in ("TEvent1", "TEvent2", "TEvent3"):
     # Fill the table with 257 events
     for i in range(257):
         # First, assign the values to the Event record
-        event['name'] = 'Event: %6d' % (i)
+        event['name'] = f'Event: {i:6d}'
         event['TDCcount'] = i % (1 << 8)   # Correct range
         # Detectable errors start here. Play with them!
         event['xcoor'] = float(i ** 2)     # Wrong spelling
@@ -99,8 +99,8 @@ for tablename in ("TEvent1", "TEvent2", "TEvent3"):
 table = root.Events.TEvent3
 e = [p['TDCcount'] for p in table
      if p['ADCcount'] < 20 and 4 <= p['TDCcount'] < 15]
-print("Last record ==>", p)
-print("Selected values ==>", e)
-print("Total selected records ==> ", len(e))
+print(f"Last record ==> {p}")
+print(f"Selected values ==> {e}")
+print(f"Total selected records ==> {len(e)}")
 # Finally, close the file (this also will flush all the remaining buffers!)
 fileh.close()

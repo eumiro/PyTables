@@ -152,8 +152,7 @@ def check_file_access(filename, mode='r'):
         if not os.path.isfile(filename):
             raise OSError(f"``{filename}`` is not a regular file")
         if not os.access(filename, os.R_OK):
-            raise OSError("file ``%s`` exists but it can not be read"
-                          % (filename,))
+            raise OSError(f"file ``{filename}`` exists but it can not be read")
     elif mode == 'w':
         if os.access(filename, os.F_OK):
             # Since the file is not removed but replaced,
@@ -170,8 +169,9 @@ def check_file_access(filename, mode='r'):
             if not os.path.isdir(parentname):
                 raise OSError(f"``{parentname}`` is not a directory")
             if not os.access(parentname, os.W_OK):
-                raise OSError("directory ``%s`` exists but it can not be "
-                              "written" % (parentname,))
+                raise OSError(
+                    f"directory ``{parentname}`` exists "
+                    f"but it can not be written")
     elif mode == 'a':
         if os.access(filename, os.F_OK):
             check_file_access(filename, 'r+')
@@ -180,8 +180,8 @@ def check_file_access(filename, mode='r'):
     elif mode == 'r+':
         check_file_access(filename, 'r')
         if not os.access(filename, os.W_OK):
-            raise OSError("file ``%s`` exists but it can not be written"
-                          % (filename,))
+            raise OSError(
+                f"file ``{filename}`` exists but it can not be written")
     else:
         raise ValueError(f"invalid mode: {mode!r}")
 
@@ -247,7 +247,7 @@ def show_stats(explain, tref, encoding=None):
         encoding = sys.getdefaultencoding()
 
     # Build the command to obtain memory info
-    cmd = "cat /proc/%s/status" % os.getpid()
+    cmd = f"cat /proc/{os.getpid()}/status"
     sout = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE).stdout
     for line in sout:
         line = line.decode(encoding)
@@ -264,12 +264,12 @@ def show_stats(explain, tref, encoding=None):
         elif line.startswith("VmLib:"):
             vmlib = int(line.split()[1])
     sout.close()
-    print("Memory usage: ******* %s *******" % explain)
+    print(f"Memory usage: ******* {explain} *******")
     print(f"VmSize: {vmsize:>7} kB\tVmRSS: {vmrss:>7} kB")
     print(f"VmData: {vmdata:>7} kB\tVmStk: {vmstk:>7} kB")
     print(f"VmExe:  {vmexe:>7} kB\tVmLib: {vmlib:>7} kB")
     tnow = time()
-    print("WallClock time:", round(tnow - tref, 3))
+    print(f"WallClock time: {tnow - tref:.3f}")
     return tnow
 
 
@@ -329,27 +329,27 @@ def fetch_logged_instances(classes="*"):
 
 def count_logged_instances(classes, file=sys.stdout):
     for classname in string_to_classes(classes):
-        file.write("%s: %d\n" % (classname, len(tracked_classes[classname])))
+        file.write(f"{classname}: {len(tracked_classes[classname])}\n")
 
 
 
 def list_logged_instances(classes, file=sys.stdout):
     for classname in string_to_classes(classes):
-        file.write('\n%s:\n' % classname)
+        file.write(f'\n{classname}:\n')
         for ref in tracked_classes[classname]:
             obj = ref()
             if obj is not None:
-                file.write('    %s\n' % repr(obj))
+                file.write(f'    {obj!r}\n')
 
 
 
 def dump_logged_instances(classes, file=sys.stdout):
     for classname in string_to_classes(classes):
-        file.write('\n%s:\n' % classname)
+        file.write(f'\n{classname}:\n')
         for ref in tracked_classes[classname]:
             obj = ref()
             if obj is not None:
-                file.write('    %s:\n' % obj)
+                file.write(f'    {obj}:\n')
                 for key, value in obj.__dict__.items():
                     file.write(f'        {key:>20} : {value}\n')
 

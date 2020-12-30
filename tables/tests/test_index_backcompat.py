@@ -28,7 +28,7 @@ class IndexesTestCase(common.TestFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test01_string..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test01_string...")
 
         table1 = self.table1
         table2 = self.table2
@@ -58,7 +58,7 @@ class IndexesTestCase(common.TestFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test02_bool..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test02_bool...")
 
         table1 = self.table1
         table2 = self.table2
@@ -81,7 +81,7 @@ class IndexesTestCase(common.TestFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test03_int..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test03_int...")
 
         table1 = self.table1
         table2 = self.table2
@@ -113,7 +113,7 @@ class IndexesTestCase(common.TestFileMixin, TestCase):
 
         if common.verbose:
             print('\n', '-=' * 30)
-            print("Running %s.test04_float..." % self.__class__.__name__)
+            print(f"Running {self.__class__.__name__}.test04_float...")
 
         table1 = self.table1
         table2 = self.table2

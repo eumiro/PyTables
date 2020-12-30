@@ -44,19 +44,19 @@ class DB:
         self.scale = NOISE
 
     def get_db_size(self):
-        sout = subprocess.Popen("sync;du -s %s" % self.filename, shell=True,
+        sout = subprocess.Popen(f"sync;du -s {self.filename}", shell=True,
                                 stdout=subprocess.PIPE).stdout
         line = [l for l in sout][0]
         return int(line.split()[0])
 
     def print_mtime(self, t1, explain):
         mtime = time() - t1
-        print("%s:" % explain, round(mtime, 6))
-        print("Krows/s:", round((self.nrows / 1000.) / mtime, 6))
+        print(f"{explain}: {mtime:.6f}")
+        print(f"Krows/s: {self.nrows / 1000. / mtime:.6f}")
 
     def print_db_sizes(self, init, filled):
         array_size = (filled - init) / 1024.
-        print("Array size (MB):", round(array_size, 3))
+        print(f"Array size (MB): {array_size:.3f}")
 
     def open_db(self, remove=0):
         if remove and os.path.exists(self.filename):
@@ -118,8 +118,8 @@ class DB:
             qtime2 = sum(ltimes[5:]) / (ntimes - 5)
         else:
             qtime2 = ltimes[-1]  # Last measured time
-        print("1st query time:", round(qtime1, 3))
-        print("Mean (skipping the first 5 meas.):", round(qtime2, 3))
+        print(f"1st query time: {qtime1:.3f}")
+        print(f"Mean (skipping the first 5 meas.): {qtime2:.3f}")
 
     def query_db(self, niter, avoidfscache, verbose):
         self.con = self.open_db()
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     import sys
     import getopt
 
-    usage = """usage: %s [-v] [-m] [-c] [-q] [-x] [-z complevel] [-l complib] [-N niter] [-n nrows] [-d datadir] [-t] type [-s] chunksize
+    usage = f"""usage: {sys.argv[0]} [-v] [-m] [-c] [-q] [-x] [-z complevel] [-l complib] [-N niter] [-n nrows] [-d datadir] [-t] type [-s] chunksize
             -v verbose
             -m use random values to fill the array
             -q do a (random) lookup
@@ -162,7 +162,7 @@ if __name__ == "__main__":
             -d directory to save data (default: data.nobackup)
             -t select the type for array ('int' or 'float'. def 'float')
             -s select the chunksize for array
-            \n""" % sys.argv[0]
+            \n"""
 
     try:
         opts, pargs = getopt.getopt(sys.argv[1:], 'vmcqxz:l:N:n:d:t:s:')
@@ -229,9 +229,9 @@ if __name__ == "__main__":
 
     if docreate:
         if verbose:
-            print("writing %s rows" % krows)
+            print(f"writing {krows} rows")
         db.create_db(verbose)
 
     if doquery:
-        print("Calling query_db() %s times" % niter)
+        print(f"Calling query_db() {niter} times")
         db.query_db(niter, avoidfscache, verbose)

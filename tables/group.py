@@ -322,14 +322,14 @@ class Group(hdf5extension.Group, Node):
                 if warn:
                     if childCID is None:
                         warnings.warn(
-                            "leaf ``%s`` is of an unsupported type; "
-                            "it will become an ``UnImplemented`` node"
-                            % self._g_join(childname))
+                            f"leaf ``{self._g_join(childname)}`` is of an "
+                            f"unsupported type; it will become "
+                            f"an ``UnImplemented`` node")
                     else:
                         warnings.warn(
-                            ("leaf ``%s`` has an unknown class ID ``%s``; "
-                             "it will become an ``UnImplemented`` node")
-                            % (self._g_join(childname), childCID))
+                            f"leaf ``{self._g_join(childname)}`` has an "
+                            f"unknown class ID ``{childCID}``; it will "
+                            f"become an ``UnImplemented`` node")
                 return UnImplemented
             assert childCID2 in class_id_dict
             return class_id_dict[childCID2]  # look up leaf class
@@ -389,8 +389,8 @@ class Group(hdf5extension.Group, Node):
         node_type = self._g_get_objinfo(name)
         if node_type == "NoSuchNode":
             raise NoSuchNodeError(
-                "group ``%s`` does not have a child named ``%s``"
-                % (self._v_pathname, name))
+                f"group ``{self._v_pathname}`` "
+                f"does not have a child named ``{name}``")
         return node_type
 
 
@@ -488,11 +488,12 @@ class Group(hdf5extension.Group, Node):
     def _g_width_warning(self):
         """Issue a :exc:`PerformanceWarning` on too many children."""
 
-        warnings.warn("""\
-group ``%s`` is exceeding the recommended maximum number of children (%d); \
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
-                      % (self._v_pathname, self._v_max_group_width),
-                      PerformanceWarning)
+        warnings.warn(
+            f"group ``{self._v_pathname}`` is exceeding the recommended "
+            f"maximum number of children ({self._v_max_group_width}); "
+            f"be ready to see PyTables asking for *lots* of memory "
+            f"and possibly slow I/O.",
+            PerformanceWarning)
 
 
     def _g_refnode(self, childnode, childname, validate=True):
@@ -518,16 +519,16 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
         # using ``File.get_node`` so they already exist in `self`.
         if (not isinstance(childnode, Link)) and childname in self:
             raise NodeError(
-                "group ``%s`` already has a child node named ``%s``"
-                % (self._v_pathname, childname))
+                f"group ``{self._v_pathname}`` already "
+                f"has a child node named ``{childname}``")
 
         # Show a warning if there is an object attribute with that name.
         if childname in self.__dict__:
             warnings.warn(
-                "group ``%s`` already has an attribute named ``%s``; "
-                "you will not be able to use natural naming "
-                "to access the child node"
-                % (self._v_pathname, childname), NaturalNameWarning)
+                f"group ``{self._v_pathname}`` already has an attribute "
+                f"named ``{childname}``; you will not be able to use "
+                f"natural naming to access the child node",
+                NaturalNameWarning)
 
         # Check group width limits.
         if (len(self._v_children) + len(self._v_hidden) >=
@@ -562,9 +563,9 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
         """
 
         # This can *not* be triggered because of the user.
-        assert childname in self, \
-            ("group ``%s`` does not have a child node named ``%s``"
-                % (self._v_pathname, childname))
+        assert childname in self, (
+                f"group ``{self._v_pathname}`` does not have "
+                f"a child node named ``{childname}``")
 
         # Update members information, if needed
         if '_v_children' in self.__dict__:
@@ -864,10 +865,10 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
         mydict = self.__dict__
         if '__members__' in mydict and name in self.__members__:
             warnings.warn(
-                "group ``%s`` already has a child node named ``%s``; "
-                "you will not be able to use natural naming "
-                "to access the child node"
-                % (self._v_pathname, name), NaturalNameWarning)
+                f"group ``{self._v_pathname}`` already has a child node "
+                f"named ``{name}``; you will not be able to use natural "
+                f"naming to access the child node",
+                NaturalNameWarning)
 
         super().__setattr__(name, value)
 
@@ -934,10 +935,9 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
 
         if self._v_nchildren > 0:
             if not (recursive or force):
-                raise NodeError("group ``%s`` has child nodes; "
-                                "please set `recursive` or `force` to true "
-                                "to remove it"
-                                % (self._v_pathname,))
+                raise NodeError(
+                    f"group ``{self._v_pathname}`` has child nodes; "
+                    f"please set `recursive` or `force` to true to remove it")
 
             # First close all the descendents hanging from this group,
             # so that it is not possible to use a node that no longer exists.
@@ -1025,10 +1025,9 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
             for childname in self._v_children:
                 if childname in dstparent:
                     raise NodeError(
-                        "destination group ``%s`` already has "
-                        "a node named ``%s``; "
-                        "you may want to use the ``overwrite`` argument"
-                        % (dstparent._v_pathname, childname))
+                        f"destination group ``{dstparent._v_pathname}`` "
+                        f"already has a node named ``{childname}``; "
+                        f"you may want to use the ``overwrite`` argument")
 
         use_hardlinks = kwargs.get('use_hardlinks', False)
         if use_hardlinks:
@@ -1099,9 +1098,9 @@ be ready to see PyTables asking for *lots* of memory and possibly slow I/O."""
             f'{childname!r} ({child.__class__.__name__})'
             for (childname, child) in self._v_children.items()
         ]
-        childlist = '[%s]' % (', '.join(rep))
+        childlist = f"[', '.join(rep)]"
 
-        return "{}\n  children := {}".format(str(self), childlist)
+        return f"{self!s}\n  children := {childlist}"
 
 
 # Special definition for group root
@@ -1186,10 +1185,9 @@ class RootGroup(Group):
                 return ChildClass(self, childname)
             except Exception as exc:  # XXX
                 warnings.warn(
-                    "problems loading leaf ``%s``::\n\n"
-                    "  %s\n\n"
-                    "The leaf will become an ``UnImplemented`` node."
-                    % (self._g_join(childname), exc))
+                    f"problems loading leaf ``{self._g_join(childname)}``::"
+                    f"\n\n  {exc}\n\nThe leaf will become "
+                    f"an ``UnImplemented`` node.")
                 # If not, associate an UnImplemented object to it
                 return UnImplemented(self, childname)
         elif node_type == "SoftLink":
@@ -1215,10 +1213,11 @@ class TransactionGroupG(NotLoggedMixin, Group):
 
 
     def _g_width_warning(self):
-        warnings.warn("""\
-the number of transactions is exceeding the recommended maximum (%d);\
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
-                      % (self._v_max_group_width,), PerformanceWarning)
+        warnings.warn(
+            f"the number of transactions is exceeding the recommended "
+            f"maximum ({self._v_max_group_width}); be ready to see "
+            f"PyTables asking for *lots* of memory and possibly slow I/O""",
+            PerformanceWarning)
 
 
 
@@ -1227,11 +1226,12 @@ class TransactionG(NotLoggedMixin, Group):
 
 
     def _g_width_warning(self):
-        warnings.warn("""\
-transaction ``%s`` is exceeding the recommended maximum number of marks (%d);\
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
-                      % (self._v_pathname, self._v_max_group_width),
-                      PerformanceWarning)
+        warnings.warn(
+            f"transaction ``{self._v_pathname}`` is exceeding "
+            f"the recommended maximum number of marks "
+            f"({self._v_max_group_width}); be ready to see PyTables "
+            f"asking for *lots* of memory and possibly slow I/O""",
+            PerformanceWarning)
 
 
 
@@ -1244,11 +1244,12 @@ class MarkG(NotLoggedMixin, Group):
     _c_shadow_name_re = re.compile(r'^a[0-9]+$')
 
     def _g_width_warning(self):
-        warnings.warn("""\
-mark ``%s`` is exceeding the recommended maximum action storage (%d nodes);\
-be ready to see PyTables asking for *lots* of memory and possibly slow I/O"""
-                      % (self._v_pathname, self._v_max_group_width),
-                      PerformanceWarning)
+        warnings.warn(
+            f"mark ``{self._v_pathname}`` is exceeding the recommended "
+            f"maximum action storage ({self._v_max_group_width} nodes); "
+            f"be ready to see PyTables asking for *lots* of memory and "
+            f"possibly slow I/O""",
+            PerformanceWarning)
 
 
     def _g_reset(self):

@@ -82,8 +82,8 @@ def get_class_by_name(classname):
 
     # Get the class object corresponding to `classname`.
     if classname not in class_name_dict:
-        raise TypeError("there is no registered node class named ``%s``"
-                        % (classname,))
+        raise TypeError(
+            f"there is no registered node class named ``{classname}``")
 
     return class_name_dict[classname]
 

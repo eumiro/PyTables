@@ -43,7 +43,7 @@ def quantize(data, least_significant_digit):
 
 
 def get_db_size(filename):
-    sout = subprocess.Popen("ls -sh %s" % filename, shell=True,
+    sout = subprocess.Popen(f"ls -sh {filename}", shell=True,
                             stdout=subprocess.PIPE).stdout
     line = [l for l in sout][0]
     return line.split()[0]
@@ -52,7 +52,7 @@ def get_db_size(filename):
 def bench(chunkshape, filters):
     numpy.random.seed(1)   # to have reproductible results
     filename = tempfile.mktemp(suffix='.h5')
-    print("Doing test on the file system represented by:", filename)
+    print(f"Doing test on the file system represented by: {filename}")
 
     f = tables.open_file(filename, 'w')
     e = f.create_earray(f.root, 'earray', datom, shape=(0, M),
@@ -64,10 +64,10 @@ def bench(chunkshape, filters):
         # e.append([numpy.random.rand(M)])  # use this for less compressibility
         e.append([quantize(numpy.random.rand(M), 6)])
     # os.system("sync")
-    print("Creation time:", round(time() - t1, 3), end=' ')
+    print(f"Creation time: {time() - t1:.3f}", end=' ')
     filesize = get_db_size(filename)
     filesize_bytes = os.stat(filename)[6]
-    print("\t\tFile size: %d -- (%s)" % (filesize_bytes, filesize))
+    print(f"\t\tFile size: {filesize_bytes} -- ({filesize})")
 
     # Read in sequential mode:
     e = f.root.earray
@@ -76,7 +76,7 @@ def bench(chunkshape, filters):
     #os.system("sync; echo 1 > /proc/sys/vm/drop_caches")
     for row in e:
         t = row
-    print("Sequential read time:", round(time() - t1, 3), end=' ')
+    print(f"Sequential read time: {time() - t1:.3f}", end=' ')
 
     # f.close()
     # return
@@ -97,7 +97,7 @@ def bench(chunkshape, filters):
     for i in i_index:
         for j in j_index:
             t = e[i, j]
-    print("\tRandom read time:", round(time() - t1, 3))
+    print(f"\tRandom read time: {time() - t1:.3f}")
 
     f.close()
 
@@ -121,5 +121,5 @@ for complib in (None, 'zlib', 'lzo', 'blosc'):
             chunk2 = M
         chunkshape = (chunk1, chunk2)
         cs_str = str(chunksize / 1024) + " KB"
-        print("***** Chunksize:", cs_str, "/ Chunkshape:", chunkshape, "*****")
+        print(f"***** Chunksize: {cs_str} / Chunkshape: {chunkshape} *****")
         bench(chunkshape, filters)
